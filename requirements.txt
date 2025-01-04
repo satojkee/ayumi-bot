@@ -1,5 +1,7 @@
 environs~=9.5.0
 pytelegrambotapi~=4.22.1
+psycopg2~=2.9.7
+aiohttp~=3.8.5
 SQLAlchemy~=2.0.20
 typing~=3.7.4.3
 toml~=0.10.2
