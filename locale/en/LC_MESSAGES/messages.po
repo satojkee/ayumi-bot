@@ -1,0 +1,97 @@
+# English translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-01-04 12:25+0200\n"
+"PO-Revision-Date: 2025-01-02 12:52+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.0\n"
+
+#: ayumi/bot/props.py:32
+msgid "common.start"
+msgstr "Hello, <b>{first_name}</b>!"
+
+#: ayumi/bot/props.py:33
+msgid "common.help"
+msgstr ""
+"My name is <b>{bot_name}</b>. I'm an ai-powered chat assistant.\n"
+"We <b>must</b> become friends first, if you want to use my features ^^\n"
+"Use <code>/{request_access}</code> for that 👉👈\n"
+"\n"
+"<b>How to check our relationship?</b>\n"
+"Use <code>/{status}</code> for that :3\n"
+"\n"
+"<b>How to ask me a question?</b>\n"
+"Start your message with <b>{bot_name}</b>.\n"
+"<code>{bot_name}, how are you today?</code>\n"
+"\n"
+"<b>How to generate an image?</b>\n"
+"Start your message with <b>{bot_name}@i</b>.\n"
+"<code>{bot_name}@i, small cute kittens.</code>"
+
+#: ayumi/bot/props.py:34
+msgid "common.access_request"
+msgstr ""
+"Access request from @{username} | [{uuid}]\n"
+"Select the action below."
+
+#: ayumi/bot/props.py:35
+msgid "common.processing"
+msgstr "Processing your request 🕒"
+
+#: ayumi/bot/props.py:36
+msgid "common.access_granted"
+msgstr "We're friends now ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧"
+
+#: ayumi/bot/props.py:37
+msgid "common.access_refused"
+msgstr "I don't want to be friends with you 😢"
+
+#: ayumi/bot/props.py:38
+msgid "common.request_pending"
+msgstr "I'll let you know when I make a decision ≽^•⩊•^≼"
+
+#: ayumi/bot/props.py:41
+msgid "status.positive"
+msgstr "You're my friend, <b>{first_name}</b> ❤️"
+
+#: ayumi/bot/props.py:42
+msgid "status.negative"
+msgstr "I don't know you, <b>{first_name}</b> 😢"
+
+#: ayumi/bot/props.py:45
+msgid "adk.approve"
+msgstr "Approve ✔️"
+
+#: ayumi/bot/props.py:46
+msgid "adk.deny"
+msgstr "Deny ❌"
+
+#: ayumi/bot/props.py:47
+msgid "adk.revoke"
+msgstr "Revoke ⚠️"
+
+#: ayumi/bot/props.py:50
+msgid "error.api"
+msgstr "😢 Something went wrong during API request. Please, try again "
+
+#: ayumi/bot/props.py:51
+msgid "error.access"
+msgstr ""
+"⚠️ Use: <code>/{command}</code> command to request an access.\n"
+"For additional information, contact: @{admin}"
+
+#~ msgid "common.api_error"
+#~ msgstr "Something went wrong during API request. Please, try again."
+

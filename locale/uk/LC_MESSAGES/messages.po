@@ -1,0 +1,94 @@
+# Ukrainian translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-01-04 12:25+0200\n"
+"PO-Revision-Date: 2025-01-02 12:52+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: uk\n"
+"Language-Team: uk <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.0\n"
+
+#: ayumi/bot/props.py:32
+msgid "common.start"
+msgstr "Привіт, <b>{first_name}</b>!"
+
+#: ayumi/bot/props.py:33
+msgid "common.help"
+msgstr "Я <b>{bot_name}</b> - розумна чат-помічниця."
+"\nМи повинні бути друзями, щоб ви змогли користуватися моїми можливостями ^^"
+"\nЗапросіть доступ командою <code>/{request_access}</code> для цього 👉👈"
+"\n\n<b>Як перевірити наші відносини?</b>"
+"\n<code>/{status}</code> :3"
+"\n\n<b>Як спитати щось в мене?</b>"
+"\nПочни своє повідомлення з <b>{bot_name}</b>"
+"\n<code>{bot_name}, як ти себе почуваєш?</code>"
+"\n\n<b>Як згенерувати зображення?</b>"
+"\nПочни своє повідомлення з <b>{bot_name}@i</b>"
+"\n<code>{bot_name}@i, маленькі милі кошенята.</code>"
+
+#: ayumi/bot/props.py:34
+msgid "common.access_request"
+msgstr "Запит доступу від @{username} | [{uuid}]\n"
+"Оберіть дію знизу"
+
+#: ayumi/bot/props.py:35
+msgid "common.processing"
+msgstr "Опрацьовую твій запит 🕒"
+
+#: ayumi/bot/props.py:36
+msgid "common.access_granted"
+msgstr "Ура, тепер ти мій друг/подруга ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧"
+
+#: ayumi/bot/props.py:37
+msgid "common.access_refused"
+msgstr "Я не хочу дружити з тобою 😢"
+
+#: ayumi/bot/props.py:38
+msgid "common.request_pending"
+msgstr "Я подумаю, але дам тобі знати, як закінчу ≽^•⩊•^≼"
+
+#: ayumi/bot/props.py:41
+msgid "status.positive"
+msgstr "Ти мій друг/подруга, <b>{first_name}</b> ❤️"
+
+#: ayumi/bot/props.py:42
+msgid "status.negative"
+msgstr "Я не знаю тебе, <b>{first_name}</b> 😢"
+
+#: ayumi/bot/props.py:45
+msgid "adk.approve"
+msgstr "Надати ✔️"
+
+#: ayumi/bot/props.py:46
+msgid "adk.deny"
+msgstr "Відхилити ❌"
+
+#: ayumi/bot/props.py:47
+msgid "adk.revoke"
+msgstr "Позбавити доступу ⚠️"
+
+#: ayumi/bot/props.py:50
+msgid "error.api"
+msgstr "Щось не так з запитом до API серверую. Будь ласка, спробуй ще раз."
+
+#: ayumi/bot/props.py:51
+msgid "error.access"
+msgstr "⚠️ Відмова у доступі. Спробуй: <code>/{command}</code>, щоб його запросити.\n"
+"Для додаткової інформації, звернися до: @{admin}"
+#~ msgid "common.request_access"
+#~ msgstr ""
+
+#~ msgid "common.api_error"
+#~ msgstr ""
+
