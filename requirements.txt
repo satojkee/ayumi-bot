@@ -7,4 +7,4 @@ typing~=3.7.4.3
 toml~=0.10.2
 munch~=4.0.0
 click~=8.1.7
-openai~=1.42.0
+openai~=1.59.3
