@@ -1,6 +1,6 @@
 import re
 import functools
-from typing import Callable, Any
+from typing import Callable, Any, Optional
 
 from telebot.types import Message
 from openai import BadRequestError
@@ -9,13 +9,12 @@ from ayumi import logger
 from ayumi.loc import get_translator
 from ayumi.bot import session
 from ayumi.db.repository import UserRepo
-from ayumi.config import TELEGRAM_OWNER_USERNAME
-from ayumi.bot.props import T, Command, ParseMode, Pattern
+from ayumi.bot.props import T, ParseMode, Pattern
+from ayumi.config import TELEGRAM_OWNER_ID, TELEGRAM_OWNER_USERNAME
 
 
 __all__ = (
     'get_api_response',
-    'send_access_warning',
     'auto_translator',
     'trace_message',
     'authenticate',
@@ -41,23 +40,6 @@ async def get_api_response(func: Callable, t: Callable,
         logger.error(f'Unknown error raised during API request.', e)
 
     return t(T.Error.api)
-
-
-async def send_access_warning(message: Message, _: Callable) -> None:
-    """Use it to send `access required` warning to the user.
-
-    :param message: Message - Message instance
-    :param _: Callable - translator func
-    :return: None
-    """
-    await session.reply_to(
-        message=message,
-        parse_mode=ParseMode.html,
-        text=_(T.Error.access).format(
-            command=Command.request_access[0],
-            admin=TELEGRAM_OWNER_USERNAME
-        )
-    )
 
 
 def auto_translator(func: Callable) -> Any:
@@ -106,7 +88,7 @@ def trace_message(func: Callable) -> Any:
     return wrapper
 
 
-def authenticate(func: Callable) -> Any:
+def authenticate(admin_only: Optional[bool] = False) -> Any:
     """Use it as decorator for telebot handlers.
     Apply for each handler where user authentication is required.
 
@@ -118,14 +100,33 @@ def authenticate(func: Callable) -> Any:
 
     :return: Any
     """
-    @functools.wraps(func)
-    async def wrapper(*args: Any, **kwargs: Any) -> Any:
-        uuid = args[0].from_user.id
+    def decorator(func: Callable) -> Any:
+        @functools.wraps(func)
+        async def wrapper(*args: Any, **kwargs: Any) -> Any:
+            uuid = args[0].from_user.id
+            # check if user is the admin
+            # if not, and admin_only flag is set to `False` -> check in db
+            auth = uuid == TELEGRAM_OWNER_ID
+            if not admin_only:
+                auth = auth or await UserRepo.get(uuid=uuid)
+            # if user is authenticated -> decorated function
+            # if not -> permissions violation
+            if auth:
+                return await func(*args, **kwargs)
+            else:
+                await session.send_message(
+                    chat_id=uuid,
+                    parse_mode=ParseMode.html,
+                    text=(
+                        get_translator(args[0].from_user.language_code)
+                        (T.Error.permissions)
+                        .format(admin=TELEGRAM_OWNER_USERNAME)
+                    )
+                )
 
-        return await func(auth=await UserRepo.get(uuid=uuid) is not None,
-                          *args, **kwargs)
+        return wrapper
 
-    return wrapper
+    return decorator
 
 
 def extract_prompt(message: Message) -> str:

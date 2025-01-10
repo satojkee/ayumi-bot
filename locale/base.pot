@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-04 12:25+0200\n"
+"POT-Creation-Date: 2025-01-10 13:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,40 +17,36 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.0\n"
 
-#: ayumi/bot/props.py:32
+#: ayumi/bot/props.py:33
 msgid "common.start"
 msgstr ""
 
-#: ayumi/bot/props.py:33
+#: ayumi/bot/props.py:34
 msgid "common.help"
 msgstr ""
 
-#: ayumi/bot/props.py:34
+#: ayumi/bot/props.py:35
 msgid "common.access_request"
 msgstr ""
 
-#: ayumi/bot/props.py:35
+#: ayumi/bot/props.py:36
 msgid "common.processing"
 msgstr ""
 
-#: ayumi/bot/props.py:36
-msgid "common.access_granted"
-msgstr ""
-
 #: ayumi/bot/props.py:37
-msgid "common.access_refused"
+msgid "common.user_profile"
 msgstr ""
 
-#: ayumi/bot/props.py:38
-msgid "common.request_pending"
+#: ayumi/bot/props.py:40
+msgid "access.granted"
 msgstr ""
 
 #: ayumi/bot/props.py:41
-msgid "status.positive"
+msgid "access.refused"
 msgstr ""
 
 #: ayumi/bot/props.py:42
-msgid "status.negative"
+msgid "access.pending"
 msgstr ""
 
 #: ayumi/bot/props.py:45
@@ -70,6 +66,6 @@ msgid "error.api"
 msgstr ""
 
 #: ayumi/bot/props.py:51
-msgid "error.access"
+msgid "error.permissions"
 msgstr ""
 

@@ -1,4 +1,4 @@
-# Ayumi - AI-chat assistant for telegram
+# Ayumi - AI-powered chat assistant
 * Author: [satojkee](https://github.com/satojkee/)
 * Project version: [ayumi-bot](https://github.com/satojkee/ayumi-bot/tree/v2)
 
@@ -37,10 +37,12 @@ pip3 install -r requirements.txt
 pool_pre_ping = false
 echo = false
 
-[locales]
+[locale]
+languages = ["en", "uk"]
+
+[locale.translator]
 domain = "messages"
-path = "locale"
-supported = ["en", "uk"]
+localedir = "locale"
 
 [logger]
 level = "DEBUG"

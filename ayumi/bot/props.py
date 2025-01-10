@@ -19,27 +19,27 @@ class ParseMode:
 
 
 class Command:
-    """Each command represents a list[str]."""
+    """Define commands here"""
     start: list[str] = ['start', 's']
     help: list[str] = ['help', 'h']
     request_access: list[str] = ['request_access', 'r']
+    users: list[str] = ['users', 'u']
     status: list[str] = ['status', 's']
 
 
 class T:
-    """Contains `pybabel` translated responses."""
+    """Define translations here."""
     class Common:
         start: str = gettext('common.start')
         help: str = gettext('common.help')
         access_request: str = gettext('common.access_request')
         processing: str = gettext('common.processing')
-        access_granted: str = gettext('common.access_granted')
-        access_refused: str = gettext('common.access_refused')
-        request_pending: str = gettext('common.request_pending')
+        user_profile: str = gettext('common.user_profile')
 
-    class Status:
-        positive: str = gettext('status.positive')
-        negative: str = gettext('status.negative')
+    class Access:
+        granted: str = gettext('access.granted')
+        refused: str = gettext('access.refused')
+        pending: str = gettext('access.pending')
 
     class ADKeyboard:
         approve: str = gettext('adk.approve')
@@ -48,10 +48,11 @@ class T:
 
     class Error:
         api: str = gettext('error.api')
-        access: str = gettext('error.access')
+        permissions: str = gettext('error.permissions')
 
 
 class Pattern:
+    """Define patterns here."""
     access: str = r'\d*:(0|1)\Z'
     gen_image: str = fr'\A({TELEGRAM_BOT_NAME}@i).*'
     gen_text: str = fr'\A{TELEGRAM_BOT_NAME}[^@].*'
@@ -59,8 +60,10 @@ class Pattern:
 
 
 class Format:
+    """Define formats here."""
     access: str = '{uuid}:{state}'
 
 
 class ContentType:
+    """Define content types here."""
     text: str = 'text'

@@ -34,6 +34,17 @@ class UserRepo:
         """
         return session.query(User).filter_by(uuid=uuid).first()
 
+    @staticmethod
+    @provider
+    async def get_all(session: Session) -> list[User]:
+        """Use it to get a list of `User` instances stored in the db.
+
+        :param session: Session - db session
+        :return: list[User] - a list of `User` instances
+        """
+        # noinspection PyTypeChecker
+        return session.query(User).all()
+
     @classmethod
     @provider
     async def delete(cls, session: Session, uuid: int) -> None:
