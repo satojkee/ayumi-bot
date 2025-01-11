@@ -30,6 +30,7 @@ async def processing_prompt_message(message: Message, _: Callable) -> None:
                          regexp=Pattern.gen_text)
 @authenticate()
 @auto_translator
+@trace_message
 async def ai_text_handler(message: Message, _: Callable) -> None:
     """AI-text handler.
 
