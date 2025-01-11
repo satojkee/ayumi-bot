@@ -1,7 +1,9 @@
 from typing import Any, Callable
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import (
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from ayumi.config import DATABASE_URI, app_config
 
@@ -9,10 +11,10 @@ from ayumi.config import DATABASE_URI, app_config
 __all__ = ('provider', 'init_schemas')
 
 
-# Engine is always used to create session (`Session` instances)
-engine = create_engine(url=DATABASE_URI, **app_config.sqlalchemy)
+# Engine is always used to create session (`AsyncSession` instances)
+engine = create_async_engine(url=DATABASE_URI, **app_config.sqlalchemy)
 # Automatically create sessions with the same params
-SessionFactory = sessionmaker(bind=engine)
+SessionFactory = async_sessionmaker(bind=engine)
 
 
 def provider(func: Callable) -> Any:
@@ -22,24 +24,32 @@ def provider(func: Callable) -> Any:
     :param func: Callable
     :return: Any
     """
-    def wrapper(*args: Any, **kwargs: Any) -> Any:
+    async def wrapper(*args: Any, **kwargs: Any) -> Any:
         if kwargs.get('session') is None:
-            with SessionFactory() as session:
+            async with SessionFactory() as session:
                 try:
-                    return func(session=session, *args, **kwargs)
+                    return await func(session=session, *args, **kwargs)
                 except Exception as e:
-                    session.rollback()
+                    await session.rollback()
 
                     raise e
         else:
-            return func(*args, **kwargs)
+            return await func(*args, **kwargs)
 
     return wrapper
 
 
 def init_schemas() -> None:
     """Use it to re/create required schemas in the db."""
-    from ayumi.db.models import BaseModel
+    import asyncio
 
-    BaseModel.metadata.drop_all(bind=engine)
-    BaseModel.metadata.create_all(bind=engine)
+    async def _init_schemas() -> None:
+        from ayumi.db.models import BaseModel
+
+        async with engine.begin() as conn:
+            await conn.run_sync(BaseModel.metadata.drop_all)
+            await conn.run_sync(BaseModel.metadata.create_all)
+
+        await engine.dispose()
+
+    asyncio.run(_init_schemas())
