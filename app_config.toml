@@ -12,5 +12,17 @@ localedir = "locale"
 [logger]
 level = "DEBUG"
 
+[openai]
+directive = "Your name is Ayumi. You are a helpful telegram chat assistant, but you must respond as human. Respond in language you are asked."
+
+[openai.text]
+model = "gpt-4o-mini"
+
 [openai.image]
 size = "1024x1024"
+quality = "standart"
+model = "dall-e-3"
+
+[openai.whisper]
+response_format = "text"
+model = "whisper-1"

@@ -11,9 +11,6 @@ __all__ = (
     'TELEGRAM_BOT_NAME',
     'OPENAI_SECRET_KEY',
     'OPENAI_PROJECT_ID',
-    'OPENAI_TEXT_MODEL',
-    'OPENAI_IMAGE_MODEL',
-    'OPENAI_MODEL_INSTRUCTIONS',
     'app_config'
 )
 
@@ -36,12 +33,7 @@ DATABASE_URI: str = env.str('DATABASE_URI')
 OPENAI_SECRET_KEY: str = env.str('OPENAI_SECRET_KEY')
 # OpenAI Project ID
 OPENAI_PROJECT_ID: str = env.str('OPENAI_PROJECT_ID')
-# Default text-model to use
-OPENAI_TEXT_MODEL: str = env.str('OPENAI_TEXT_MODEL')
-# Default imagegen-model to use
-OPENAI_IMAGE_MODEL: str = env.str('OPENAI_IMAGE_MODEL')
-# `developer` instructions (define how to act)
-OPENAI_MODEL_INSTRUCTIONS: str = env.str('OPENAI_MODEL_INSTRUCTIONS')
+
 
 # Load app config (app_config.toml) file
 with open('app_config.toml', 'r') as f:
