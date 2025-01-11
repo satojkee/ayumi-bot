@@ -1,3 +1,5 @@
+from io import BufferedReader
+
 import openai
 
 from ayumi.config import (
@@ -7,7 +9,11 @@ from ayumi.config import (
 )
 
 
-__all__ = ('generate_text', 'generate_image')
+__all__ = (
+    'generate_text',
+    'generate_image',
+    'speech_to_text'
+)
 
 
 client = openai.AsyncClient(
@@ -45,3 +51,15 @@ async def generate_image(prompt: str) -> str:
     )
 
     return response.data[0].url
+
+
+async def speech_to_text(handler: BufferedReader) -> str:
+    """Use it to extract text from an audio file.
+
+    :param handler: BufferedReader - audio file handler
+    :return: str - extracted text
+    """
+    return await client.audio.transcriptions.create(
+        **app_config.openai.speech_to_text,
+        file=handler
+    )

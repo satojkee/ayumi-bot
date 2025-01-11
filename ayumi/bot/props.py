@@ -67,3 +67,4 @@ class Format:
 class ContentType:
     """Define content types here."""
     text: str = 'text'
+    voice: str = 'voice'

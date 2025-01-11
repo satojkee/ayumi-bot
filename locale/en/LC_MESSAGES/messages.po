@@ -38,7 +38,10 @@ msgstr ""
 "\n"
 "<b>How to generate an image?</b>\n"
 "Start your message with <b>{bot_name}@i</b>.\n"
-"<code>{bot_name}@i, small cute kittens.</code>"
+"<code>{bot_name}@i, small cute kittens.</code>\n"
+"\n"
+"<b>Speech-to-text guide</b>\n"
+"Just forward a voice message you want to transcribe"
 
 #: ayumi/bot/props.py:35
 msgid "common.access_request"

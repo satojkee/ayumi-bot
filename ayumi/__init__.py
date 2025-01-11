@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 
@@ -10,6 +11,10 @@ __all__ = (
     'init_schemas'
 )
 
+
+# create temp dir if not exists
+if not os.path.exists(app_config.common.temp):
+    os.mkdir(app_config.common.temp)
 
 logger = logging.getLogger(__name__)
 

@@ -1,3 +1,4 @@
+import os
 from typing import Callable
 
 from telebot.types import Message
@@ -6,6 +7,7 @@ from ayumi.bot import session
 from ayumi.api import *
 from ayumi.bot.util import *
 from ayumi.bot.props import *
+from ayumi.config import app_config
 
 
 __all__ = (
@@ -36,7 +38,7 @@ async def ai_text_handler(message: Message, _: Callable) -> None:
     :return: None
     """
     await processing_prompt_message(message, _)
-    # wait for OpenAI response
+    # wait for OpenAI API response
     response = await get_api_response(
         func=generate_text,
         t=_,
@@ -64,7 +66,7 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
     :return: None
     """
     await processing_prompt_message(message, _)
-    # wait for OpenAI response
+    # wait for OpenAI API response
     response = await get_api_response(
         func=generate_image,
         t=_,
@@ -87,3 +89,39 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
             message_id=message.message_id + 1,
             text=response
         )
+
+
+@session.message_handler(content_types=ContentType.voice)
+@authenticate()
+@auto_translator
+@trace_message
+async def ai_speech_to_text_handler(message: Message, _: Callable) -> None:
+    """AI speech-to-text handler.
+
+    :param message: Message - Message object
+    :param _: Callable - translator func
+    :return: None
+    """
+    await processing_prompt_message(message, _)
+    # processing voice file using `telebot` features
+    # output file extension -> .ogg
+    f_info = await session.get_file(message.voice.file_id)
+    f_data = await session.download_file(f_info.file_path)
+    f_path = os.path.join(app_config.common.temp, f'{f_info.file_id}.ogg')
+
+    with open(f_path, 'wb+') as handler:
+        handler.write(f_data)
+        # wait for OpenAI API response
+        response = await get_api_response(
+            func=speech_to_text,
+            t=_,
+            handler=handler
+        )
+    # replace `T.Common.processing` message with extracted text
+    await session.edit_message_text(
+        chat_id=message.chat.id,
+        message_id=message.message_id + 1,
+        text=response
+    )
+    # remove file from temp
+    os.remove(f_path)

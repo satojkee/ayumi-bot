@@ -33,6 +33,9 @@ pip3 install -r requirements.txt
 
 ### Edit `app_config.toml` if needed
 ```toml
+[common]
+temp = "temp"
+
 [sqlalchemy]
 pool_pre_ping = false
 echo = false
@@ -58,7 +61,7 @@ size = "1024x1024"
 quality = "standart"
 model = "dall-e-3"
 
-[openai.whisper]
+[openai.speech_to_text]
 response_format = "text"
 model = "whisper-1"
 ```
