@@ -58,7 +58,6 @@ model = "gpt-4o-mini"
 
 [openai.image]
 size = "1024x1024"
-quality = "standart"
 model = "dall-e-3"
 
 [openai.speech_to_text]
