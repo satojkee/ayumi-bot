@@ -1,6 +1,6 @@
 import click
 
-from ayumi import *
+from ayumi import start_ayumi, init_schemas
 
 
 @click.command()

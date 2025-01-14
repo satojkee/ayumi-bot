@@ -1,5 +1,4 @@
 import os
-import json
 import logging
 
 from .config import app_config
@@ -28,10 +27,6 @@ stderr_handler.setFormatter(
 
 logger.setLevel(app_config.logger.level)
 logger.addHandler(stderr_handler)
-
-# displays running configuration
-logger.debug('starting ayumi')
-logger.debug(f'running configuration: {json.dumps(app_config, indent=2)}')
 
 
 from .bot import *

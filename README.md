@@ -1,20 +1,34 @@
 # Ayumi - AI-powered chat assistant
+
 * Author: [satojkee](https://github.com/satojkee/)
-* Project version: [ayumi-bot](https://github.com/satojkee/ayumi-bot/tree/v2)
+* Project: [ayumi-bot](https://github.com/satojkee/ayumi-bot/tree/v2)
+
+
+## Useful links
+
+* [OpenAI API docs](https://platform.openai.com/docs/overview)
+* [pyTelegramBotAPI](https://pytba.readthedocs.io/en/latest/)
+* [SQLAlchemy](https://www.sqlalchemy.org/)
+
 
 ## Usage guide
 
 ### Clone repository
+
 ```shell
 git clone https://github.com/satojkee/ayumi-bot.git -b v2
 ```
 
+
 ### Install dependencies
+
 ```shell
 pip3 install -r requirements.txt
 ```
 
+
 ### Configure environment variables
+
 > Set each property using `.env` file or via `cli`
 
 | Variable                    | Description                |
@@ -26,12 +40,11 @@ pip3 install -r requirements.txt
 | `TELEGRAM_BOT_NAME`         | Telegram bot name          |
 | `OPENAI_SECRET_KEY`         | OpenAI API token           |
 | `OPENAI_PROJECT_ID`         | OpenAI project ID          |
-| `OPENAI_MODEL_INSTRUCTIONS` | OpenAI model directive     |
-| `OPENAI_IMAGE_MODEL`        | OpenAI default image model |
-| `OPENAI_TEXT_MODEL`         | OpenAI default text model  |
+
 
 
 ### Edit `app_config.toml` if needed
+
 ```toml
 [common]
 temp = "temp"
@@ -65,42 +78,63 @@ response_format = "text"
 model = "whisper-1"
 ```
 
+
 ### Init database schemas
+
 ```shell
 python main.py --init
 ```
 
+
 ### Start bot
+
 ```shell
 python main.py
 ```
 
-## Pybabel guide
-> Create a new folder where the translation will be stored
+
+## Docker guide
+
+### Build image
+
 ```shell
-mkdir locale
+docker build -t ayumi .
 ```
 
+### Create container
+> Don't forget to set required variables in `Dockerfile` or directly in `docker run --env ...`
+```shell
+docker run --env ... ayumi
+```
+## Pybabel guide
+
 ### Extract strings
+
 > <b>PyBabel</b> automatically extracts all strings (values inside `gettext` function) from your sources
 
 ```shell
 pybabel extract . -o locale/base.pot
 ```
 
+
 ### Init new locale
 ```shell
 pybabel init -l en -i locale/base.pot -d locale
 ```
 
+
 ### Compile locales
+
 > Compiles `messages.po` to `messages.mo` files
+
 ```shell
 pybabel compile -d locale
 ```
 
 ### Update translations
+
 > Always use this after string extraction
+
 ```shell
 pybabel update -i locale/base.pot -d locale
 ```
