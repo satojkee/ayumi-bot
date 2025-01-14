@@ -93,6 +93,19 @@ python main.py
 ```
 
 
+## Docker guide
+
+### Build image
+
+```shell
+docker build -t ayumi .
+```
+
+### Create container
+> Don't forget to set required variables in `Dockerfile` or directly in `docker run --env ...`
+```shell
+docker run --env ... ayumi
+```
 ## Pybabel guide
 
 ### Extract strings
