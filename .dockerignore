@@ -1,0 +1,9 @@
+.idea/
+.venv/
+**/__pycache__/
+logs/
+temp/
+
+.env
+*~
+*.tmp
