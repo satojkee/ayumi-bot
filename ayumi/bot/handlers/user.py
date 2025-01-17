@@ -19,7 +19,7 @@ __all__ = (
 
 @session.message_handler(commands=Command.start)
 @auto_translator
-@trace_message
+@trace_input
 async def start_handler(message: Message, _: Callable) -> None:
     """Help command handler.
 
@@ -41,7 +41,7 @@ async def start_handler(message: Message, _: Callable) -> None:
 
 @session.message_handler(commands=Command.help)
 @auto_translator
-@trace_message
+@trace_input
 async def help_handler(message: Message, _: Callable) -> None:
     """Help command handler.
 
@@ -62,7 +62,7 @@ async def help_handler(message: Message, _: Callable) -> None:
 
 @session.message_handler(commands=Command.request_access)
 @auto_translator
-@trace_message
+@trace_input
 async def request_access_handler(message: Message, _: Callable) -> None:
     """request_access command handler.
 

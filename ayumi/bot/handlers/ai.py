@@ -1,7 +1,12 @@
 import os
 from typing import Callable
 
-from telebot.types import Message
+from telebot.types import (
+    Message,
+    InlineQuery,
+    InlineQueryResultArticle,
+    InputTextMessageContent
+)
 
 from ayumi.bot import session
 from ayumi.api import *
@@ -12,25 +17,17 @@ from ayumi.config import app_config
 
 __all__ = (
     'ai_text_handler',
-    'ai_imagegen_handler'
+    'ai_imagegen_handler',
+    'ai_speech_to_text_handler',
+    'ai_text_inline_handler'
 )
-
-
-async def processing_prompt_message(message: Message, _: Callable) -> None:
-    """Reply to message with `T.Common.processing`.
-
-    :param message: Message - Message object
-    :param _: Callable - translator func
-    :return: None
-    """
-    await session.reply_to(message=message, text=_(T.Common.processing))
 
 
 @session.message_handler(content_types=ContentType.text,
                          regexp=Pattern.gen_text)
 @authenticate()
 @auto_translator
-@trace_message
+@trace_input
 async def ai_text_handler(message: Message, _: Callable) -> None:
     """AI-text handler.
 
@@ -38,7 +35,7 @@ async def ai_text_handler(message: Message, _: Callable) -> None:
     :param _: Callable - translator func
     :return: None
     """
-    await processing_prompt_message(message, _)
+    pm_ = await processing_prompt_message(message, _)
     # wait for OpenAI API response
     response = await get_api_response(
         func=generate_text,
@@ -48,7 +45,7 @@ async def ai_text_handler(message: Message, _: Callable) -> None:
     # edit `processing` message with generated response
     await session.edit_message_text(
         chat_id=message.chat.id,
-        message_id=message.message_id + 1,
+        message_id=pm_.message_id,
         text=response,
         parse_mode=ParseMode.markdown
     )
@@ -58,7 +55,7 @@ async def ai_text_handler(message: Message, _: Callable) -> None:
                          regexp=Pattern.gen_image)
 @authenticate()
 @auto_translator
-@trace_message
+@trace_input
 async def ai_imagegen_handler(message: Message, _: Callable) -> None:
     """AI-image handler.
 
@@ -66,7 +63,7 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
     :param _: Callable - translator func
     :return: None
     """
-    await processing_prompt_message(message, _)
+    pm_ = await processing_prompt_message(message, _)
     # wait for OpenAI API response
     response = await get_api_response(
         func=generate_image,
@@ -76,8 +73,7 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
     # send image if succeeded, else -> notify about error
     if response.startswith('https://'):
         # remove `T.Common.processing` message
-        await session.delete_message(chat_id=message.chat.id,
-                                     message_id=message.message_id + 1)
+        await session.delete_message(chat_id=message.chat.id, message_id=pm_)
         # send generated image
         await session.send_photo(
             chat_id=message.chat.id,
@@ -87,7 +83,7 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
     else:
         await session.edit_message_text(
             chat_id=message.chat.id,
-            message_id=message.message_id + 1,
+            message_id=pm_.message_id,
             text=response
         )
 
@@ -95,7 +91,7 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
 @session.message_handler(content_types=ContentType.voice)
 @authenticate()
 @auto_translator
-@trace_message
+@trace_input
 async def ai_speech_to_text_handler(message: Message, _: Callable) -> None:
     """AI speech-to-text handler.
 
@@ -103,7 +99,7 @@ async def ai_speech_to_text_handler(message: Message, _: Callable) -> None:
     :param _: Callable - translator func
     :return: None
     """
-    await processing_prompt_message(message, _)
+    pm_ = await processing_prompt_message(message, _)
     # processing voice file using `telebot` features
     # output file extension -> .ogg
     f_info = await session.get_file(message.voice.file_id)
@@ -121,8 +117,44 @@ async def ai_speech_to_text_handler(message: Message, _: Callable) -> None:
     # replace `T.Common.processing` message with extracted text
     await session.edit_message_text(
         chat_id=message.chat.id,
-        message_id=message.message_id + 1,
+        message_id=pm_.message_id,
         text=response
     )
     # remove file from temp
     os.remove(f_path)
+
+
+@session.inline_handler(
+    func=lambda q: len(q.query) > app_config.inline.query.min_len
+)
+@authenticate()
+@auto_translator
+@trace_input
+async def ai_text_inline_handler(query: InlineQuery, _: Callable) -> None:
+    """AI-text inline handler.
+
+    :param query: InlineQuery - InlineQuery object
+    :param _: Callable - translator func
+    :return: None
+    """
+    response = await get_api_response(
+        func=generate_text,
+        t=_,
+        prompt=query.query
+    )
+    # answer inline query with response
+    await session.answer_inline_query(
+        inline_query_id=query.id,
+        cache_time=0,
+        results=[
+            InlineQueryResultArticle(
+                id=query.id,
+                description=response,
+                title=_(T.Common.inline_title).format(query=query.query),
+                input_message_content=InputTextMessageContent(
+                    message_text=response,
+                    parse_mode=ParseMode.markdown
+                )
+            )
+        ]
+    )

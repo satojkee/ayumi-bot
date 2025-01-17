@@ -2,8 +2,8 @@ import re
 import functools
 from typing import Callable, Any, Optional
 
-from telebot.types import Message
 from openai import BadRequestError
+from telebot.types import Message
 
 from ayumi import logger
 from ayumi.loc import get_translator
@@ -16,10 +16,22 @@ from ayumi.config import TELEGRAM_OWNER_ID, TELEGRAM_OWNER_USERNAME
 __all__ = (
     'get_api_response',
     'auto_translator',
-    'trace_message',
+    'trace_input',
     'authenticate',
-    'extract_prompt'
+    'extract_prompt',
+    'processing_prompt_message'
 )
+
+
+async def processing_prompt_message(message: Message, _: Callable) -> Message:
+    """Reply to message with `T.Common.processing`.
+
+    :param message: Message - Message object
+    :param _: Callable - translator func
+    :return: None
+    """
+    return await session.reply_to(message=message,
+                                  text=_(T.Common.processing))
 
 
 async def get_api_response(func: Callable, t: Callable,
@@ -64,13 +76,13 @@ def auto_translator(func: Callable) -> Any:
     return wrapper
 
 
-def trace_message(func: Callable) -> Any:
+def trace_input(func: Callable) -> Any:
     """Use it as decorator for telebot handlers.
-    Apply for each handler you want to see messages from.
+    Apply for each handler you want to see user input from.
 
     Usage:
         @bot.message_handler(...)
-        @trace_message
+        @trace_input
         def my_handler(message: Message, ...) -> None:
            ...
 
@@ -78,10 +90,10 @@ def trace_message(func: Callable) -> Any:
     """
     @functools.wraps(func)
     async def wrapper(*args: Any, **kwargs: Any) -> Any:
-        message = args[0]
-
-        if isinstance(message, Message):
-            logger.info(f'received message: {message}')
+        input_ = args[0]
+        # decorated handler usually has first param as API response model
+        # that model we're looking for
+        logger.info(f'input received: {input_.__class__.__name__}({input_})')
 
         return await func(*args, **kwargs)
 

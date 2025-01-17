@@ -66,7 +66,7 @@ async def access_callback(call: CallbackQuery) -> None:
 @session.message_handler(commands=Command.users)
 @authenticate(admin_only=True)
 @auto_translator
-@trace_message
+@trace_input
 async def get_users_handler(message: Message, _: Callable) -> None:
     """Fetches a list of users from the database.
 
