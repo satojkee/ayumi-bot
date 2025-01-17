@@ -35,6 +35,7 @@ class T:
         access_request: str = gettext('common.access_request')
         processing: str = gettext('common.processing')
         user_profile: str = gettext('common.user_profile')
+        inline_title: str = gettext('common.inline_title')
 
     class Access:
         granted: str = gettext('access.granted')

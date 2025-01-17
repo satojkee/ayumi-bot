@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-10 13:17+0200\n"
+"POT-Creation-Date: 2025-01-17 11:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,35 +37,39 @@ msgstr ""
 msgid "common.user_profile"
 msgstr ""
 
-#: ayumi/bot/props.py:40
-msgid "access.granted"
+#: ayumi/bot/props.py:38
+msgid "common.inline_title"
 msgstr ""
 
 #: ayumi/bot/props.py:41
-msgid "access.refused"
+msgid "access.granted"
 msgstr ""
 
 #: ayumi/bot/props.py:42
+msgid "access.refused"
+msgstr ""
+
+#: ayumi/bot/props.py:43
 msgid "access.pending"
 msgstr ""
 
-#: ayumi/bot/props.py:45
+#: ayumi/bot/props.py:46
 msgid "adk.approve"
 msgstr ""
 
-#: ayumi/bot/props.py:46
+#: ayumi/bot/props.py:47
 msgid "adk.deny"
 msgstr ""
 
-#: ayumi/bot/props.py:47
+#: ayumi/bot/props.py:48
 msgid "adk.revoke"
 msgstr ""
 
-#: ayumi/bot/props.py:50
+#: ayumi/bot/props.py:51
 msgid "error.api"
 msgstr ""
 
-#: ayumi/bot/props.py:51
+#: ayumi/bot/props.py:52
 msgid "error.permissions"
 msgstr ""
 

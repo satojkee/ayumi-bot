@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-10 13:17+0200\n"
+"POT-Creation-Date: 2025-01-17 11:38+0200\n"
 "PO-Revision-Date: 2025-01-02 12:52+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -55,37 +55,43 @@ msgstr "Processing your request 🕒"
 
 #: ayumi/bot/props.py:37
 msgid "common.user_profile"
-msgstr "User: {user}\nAdded: <code>{created}</code>"
+msgstr ""
+"User: {user}\n"
+"Added: <code>{created}</code>"
 
-#: ayumi/bot/props.py:40
+#: ayumi/bot/props.py:38
+msgid "common.inline_title"
+msgstr "Here's my response for \"{query}\""
+
+#: ayumi/bot/props.py:41
 msgid "access.granted"
 msgstr "We're friends now ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧"
 
-#: ayumi/bot/props.py:41
+#: ayumi/bot/props.py:42
 msgid "access.refused"
 msgstr "I don't want to be friends with you 😢"
 
-#: ayumi/bot/props.py:42
+#: ayumi/bot/props.py:43
 msgid "access.pending"
 msgstr "I'll let you know when I make a decision ≽^•⩊•^≼"
 
-#: ayumi/bot/props.py:45
+#: ayumi/bot/props.py:46
 msgid "adk.approve"
 msgstr "Approve ✔️"
 
-#: ayumi/bot/props.py:46
+#: ayumi/bot/props.py:47
 msgid "adk.deny"
 msgstr "Deny ❌"
 
-#: ayumi/bot/props.py:47
+#: ayumi/bot/props.py:48
 msgid "adk.revoke"
 msgstr "Revoke ⚠️"
 
-#: ayumi/bot/props.py:50
+#: ayumi/bot/props.py:51
 msgid "error.api"
 msgstr "😢 Something went wrong during API request. Please, try again "
 
-#: ayumi/bot/props.py:51
+#: ayumi/bot/props.py:52
 msgid "error.permissions"
 msgstr ""
 "⚠️ Not enough permissions :c\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-10 13:17+0200\n"
+"POT-Creation-Date: 2025-01-17 11:38+0200\n"
 "PO-Revision-Date: 2025-01-02 12:52+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
@@ -57,37 +57,43 @@ msgstr "Опрацьовую твій запит 🕒"
 
 #: ayumi/bot/props.py:37
 msgid "common.user_profile"
-msgstr "Користувач: {user}\nДодано: <code>{created}</code>"
+msgstr ""
+"Користувач: {user}\n"
+"Додано: <code>{created}</code>"
 
-#: ayumi/bot/props.py:40
+#: ayumi/bot/props.py:38
+msgid "common.inline_title"
+msgstr "Моя відповідь на \"{query}\""
+
+#: ayumi/bot/props.py:41
 msgid "access.granted"
 msgstr "Ура, тепер ти мій друг/подруга ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧"
 
-#: ayumi/bot/props.py:41
+#: ayumi/bot/props.py:42
 msgid "access.refused"
 msgstr "Я не хочу дружити з тобою 😢"
 
-#: ayumi/bot/props.py:42
+#: ayumi/bot/props.py:43
 msgid "access.pending"
 msgstr "Я подумаю, але дам тобі знати, як закінчу ≽^•⩊•^≼"
 
-#: ayumi/bot/props.py:45
+#: ayumi/bot/props.py:46
 msgid "adk.approve"
 msgstr "Надати ✔️"
 
-#: ayumi/bot/props.py:46
+#: ayumi/bot/props.py:47
 msgid "adk.deny"
 msgstr "Відхилити ❌"
 
-#: ayumi/bot/props.py:47
+#: ayumi/bot/props.py:48
 msgid "adk.revoke"
 msgstr "Позбавити доступу ⚠️"
 
-#: ayumi/bot/props.py:50
+#: ayumi/bot/props.py:51
 msgid "error.api"
 msgstr "Щось не так з запитом до API серверу. Будь ласка, спробуй ще раз."
 
-#: ayumi/bot/props.py:51
+#: ayumi/bot/props.py:52
 msgid "error.permissions"
 msgstr ""
 "⚠️ Недостатньо прав для цієї дії\n"
