@@ -73,7 +73,8 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
     # send image if succeeded, else -> notify about error
     if response.startswith('https://'):
         # remove `T.Common.processing` message
-        await session.delete_message(chat_id=message.chat.id, message_id=pm_)
+        await session.delete_message(chat_id=message.chat.id,
+                                     message_id=pm_.message_id)
         # send generated image
         await session.send_photo(
             chat_id=message.chat.id,
