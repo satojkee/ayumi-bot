@@ -47,14 +47,18 @@ async def request_access_handler(message: Message, _: Callable) -> None:
     :param _: Callable - translator func
     :return: None
     """
-    default_t = get_translator()
-    # use default translator for admin and specific for user
+    # it's kinda abuse, because there's no way
+    # to get `User` instance by its telegram id
+    admin_chat = await session.get_chat_member(TELEGRAM_OWNER_ID,
+                                               TELEGRAM_OWNER_ID)
+    admin_t = get_translator(admin_chat.user.language_code)
+    # use `admin_t` for admin and `_` for user
     await session.reply_to(message=message, text=_(T.Access.pending))
     await session.send_message(
         chat_id=TELEGRAM_OWNER_ID,
-        reply_markup=ad_keyboard(message.from_user.id, default_t),
+        reply_markup=ad_keyboard(message.from_user.id, admin_t),
         parse_mode=ParseMode.html,
-        text=default_t(T.Common.access_request).format(
+        text=admin_t(T.Common.access_request).format(
             username=message.from_user.username,
             uuid=message.from_user.id
         ),
