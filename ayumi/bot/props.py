@@ -24,7 +24,6 @@ class Command:
     help: list[str] = ['help', 'h']
     request_access: list[str] = ['request_access', 'r']
     users: list[str] = ['users', 'u']
-    status: list[str] = ['status', 's']
 
 
 class T:
