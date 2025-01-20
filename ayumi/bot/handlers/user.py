@@ -11,35 +11,12 @@ from ayumi.bot.keyboard import *
 
 
 __all__ = (
-    'start_handler',
     'help_handler',
     'request_access_handler'
 )
 
 
-@session.message_handler(commands=Command.start)
-@auto_translator
-@trace_input
-async def start_handler(message: Message, _: Callable) -> None:
-    """Help command handler.
-
-    :param message: Message - Message object
-    :param _: Callable - translator func
-    :return: None
-    """
-    await session.reply_to(
-        message=message,
-        text=_(T.Common.start).format(
-            first_name=message.from_user.first_name,
-            bot_name=TELEGRAM_BOT_NAME
-        ),
-        parse_mode=ParseMode.html
-    )
-
-    await help_handler(message)
-
-
-@session.message_handler(commands=Command.help)
+@session.message_handler(commands=Command.help + Command.start)
 @auto_translator
 @trace_input
 async def help_handler(message: Message, _: Callable) -> None:
@@ -52,9 +29,9 @@ async def help_handler(message: Message, _: Callable) -> None:
     await session.send_message(
         chat_id=message.chat.id,
         text=_(T.Common.help).format(
+            first_name=message.from_user.first_name,
             bot_name=TELEGRAM_BOT_NAME,
-            request_access=Command.request_access[0],
-            status=Command.status[0]
+            request_access=Command.request_access[0]
         ),
         parse_mode=ParseMode.html
     )
