@@ -3,7 +3,7 @@
 ---
 
 * Author: [satojkee](https://github.com/satojkee/)
-* Project: [ayumi-bot](https://github.com/satojkee/ayumi-bot/tree/v2)
+* Project: [ayumi-bot](https://github.com/satojkee/ayumi-bot/)
 
 
 ## Useful links
@@ -18,7 +18,7 @@
 ### Clone repository
 
 ```shell
-git clone https://github.com/satojkee/ayumi-bot.git -b v2
+git clone https://github.com/satojkee/ayumi-bot.git
 ```
 
 
