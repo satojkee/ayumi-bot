@@ -1,4 +1,4 @@
-# Ayumi - AI-powered chat assistant
+# Ayumi - AI-powered chat assistant for telegram
 
 ---
 
