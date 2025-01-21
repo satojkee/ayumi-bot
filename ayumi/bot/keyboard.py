@@ -20,18 +20,8 @@ def ad_keyboard(uuid: int, t: Callable) -> InlineKeyboardMarkup:
     :return: InlineKeyboardMarkup - ready-to-use keyboard
     """
     return quick_markup({
-        t(T.ADKeyboard.approve): dict(
-            callback_data=Format.access.format(
-                uuid=uuid,
-                state=1
-            )
-        ),
-        t(T.ADKeyboard.deny): dict(
-            callback_data=Format.access.format(
-                uuid=uuid,
-                state=0
-            )
-        )
+        t(k): dict(callback_data=Format.access.format(uuid=uuid, state=s))
+        for k, s in [(T.ADKeyboard.approve, 1), (T.ADKeyboard.deny, 0)]
     })
 
 
