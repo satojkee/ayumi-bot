@@ -84,5 +84,5 @@ async def get_users_handler(message: Message, _: Callable) -> None:
             parse_mode=ParseMode.html,
             text=_(T.Common.user_profile).format(
                 user=user_link(udata.user), created=user_.created
-            ),
+            )
         )

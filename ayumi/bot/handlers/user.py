@@ -61,5 +61,5 @@ async def request_access_handler(message: Message, _: Callable) -> None:
         text=admin_t(T.Common.access_request).format(
             username=message.from_user.username,
             uuid=message.from_user.id
-        ),
+        )
     )
