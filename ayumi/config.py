@@ -6,7 +6,6 @@ from munch import DefaultMunch
 __all__ = (
     'TELEGRAM_TOKEN',
     'TELEGRAM_OWNER_ID',
-    'TELEGRAM_OWNER_USERNAME',
     'DATABASE_URI',
     'TELEGRAM_BOT_NAME',
     'OPENAI_SECRET_KEY',
@@ -23,8 +22,6 @@ env.read_env()
 TELEGRAM_TOKEN: str = env.str('TELEGRAM_TOKEN')
 # Telegram admin id
 TELEGRAM_OWNER_ID: int = env.int('TELEGRAM_OWNER_ID')
-# Telegram owner username
-TELEGRAM_OWNER_USERNAME: str = env.str('TELEGRAM_OWNER_USERNAME')
 # Bot name
 TELEGRAM_BOT_NAME: str = env.str('TELEGRAM_BOT_NAME')
 # Database credentials

@@ -1,12 +1,7 @@
 import os
 from typing import Callable
 
-from telebot.types import (
-    Message,
-    InlineQuery,
-    InlineQueryResultArticle,
-    InputTextMessageContent
-)
+from telebot import types
 
 from ayumi.bot import session
 from ayumi.api import *
@@ -28,10 +23,10 @@ __all__ = (
 @authenticate()
 @auto_translator
 @trace_input
-async def ai_text_handler(message: Message, _: Callable) -> None:
+async def ai_text_handler(message: types.Message, _: Callable) -> None:
     """AI-text handler.
 
-    :param message: Message - Message object
+    :param message: types.Message - Message object
     :param _: Callable - translator func
     :return: None
     """
@@ -53,10 +48,10 @@ async def ai_text_handler(message: Message, _: Callable) -> None:
 @authenticate()
 @auto_translator
 @trace_input
-async def ai_imagegen_handler(message: Message, _: Callable) -> None:
+async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
     """AI-image handler.
 
-    :param message: Message - Message object
+    :param message: types.Message - Message object
     :param _: Callable - translator func
     :return: None
     """
@@ -87,10 +82,10 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
 @authenticate()
 @auto_translator
 @trace_input
-async def ai_speech_to_text_handler(message: Message, _: Callable) -> None:
+async def ai_speech_to_text_handler(message: types.Message, _: Callable) -> None:
     """AI speech-to-text handler.
 
-    :param message: Message - Message object
+    :param message: types.Message - Message object
     :param _: Callable - translator func
     :return: None
     """
@@ -123,10 +118,10 @@ async def ai_speech_to_text_handler(message: Message, _: Callable) -> None:
 @authenticate()
 @auto_translator
 @trace_input
-async def ai_text_inline_handler(query: InlineQuery, _: Callable) -> None:
+async def ai_text_inline_handler(query: types.InlineQuery, _: Callable) -> None:
     """AI-text inline handler.
 
-    :param query: InlineQuery - InlineQuery object
+    :param query: types.InlineQuery - InlineQuery object
     :param _: Callable - translator func
     :return: None
     """
@@ -138,11 +133,11 @@ async def ai_text_inline_handler(query: InlineQuery, _: Callable) -> None:
         inline_query_id=query.id,
         cache_time=0,
         results=[
-            InlineQueryResultArticle(
+            types.InlineQueryResultArticle(
                 id=query.id,
                 description=response,
                 title=_(T.Common.inline_title).format(query=query.query),
-                input_message_content=InputTextMessageContent(
+                input_message_content=types.InputTextMessageContent(
                     message_text=response,
                     parse_mode=ParseMode.markdown
                 )

@@ -1,8 +1,8 @@
 import re
 from typing import Callable
 
+from telebot import types
 from telebot.util import user_link, antiflood
-from telebot.types import Message, CallbackQuery
 
 from ayumi.bot import session
 from ayumi.loc import *
@@ -22,18 +22,18 @@ __all__ = (
 @session.callback_query_handler(
     func=lambda call: re.match(Pattern.access, call.data)
 )
-async def access_callback(call: CallbackQuery) -> None:
+async def access_callback(call: types.CallbackQuery) -> None:
     """Callback query handler.
     Access approve/deny and revoke handler.
 
-    :param call: CallbackQuery - CallbackQuery object
+    :param call: types.CallbackQuery - CallbackQuery object
     :return: None
     """
     uuid, state = [int(i) for i in call.data.split(':')]
     # this is required to get user's language code
-    u_data = await session.get_chat_member(uuid, uuid)
+    u_data = await get_user(uuid)
     # generating proper translator
-    t = get_translator(u_data.user.language_code)
+    t = get_translator(u_data.language_code)
 
     if state:
         await UserRepo.create(uuid=uuid)
@@ -67,15 +67,15 @@ async def access_callback(call: CallbackQuery) -> None:
 @authenticate(admin_only=True)
 @auto_translator
 @trace_input
-async def get_users_handler(message: Message, _: Callable) -> None:
+async def get_users_handler(message: types.Message, _: Callable) -> None:
     """Fetches a list of users from the database.
 
-    :param message: Message - Message object
+    :param message: types.Message - Message object
     :param _: Callable - translator func
     :return: None
     """
     for user_ in await UserRepo.get_all():
-        udata = await session.get_chat_member(user_.uuid, user_.uuid)
+        udata = await get_user(user_.uuid)
         # use `antiflood` util to avoid telegram API violations
         await antiflood(
             function=session.send_message,
@@ -83,6 +83,6 @@ async def get_users_handler(message: Message, _: Callable) -> None:
             reply_markup=revoke_keyboard(user_.uuid, _),
             parse_mode=ParseMode.html,
             text=_(T.Common.user_profile).format(
-                user=user_link(udata.user), created=user_.created
+                user=user_link(udata), created=user_.created
             )
         )

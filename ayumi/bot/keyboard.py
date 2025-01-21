@@ -1,7 +1,7 @@
-from typing import Callable
+from typing import Callable, Union
 
+from telebot import types
 from telebot.util import quick_markup
-from telebot.types import InlineKeyboardMarkup
 
 from ayumi.bot.props import Format, T
 
@@ -12,10 +12,11 @@ __all__ = (
 )
 
 
-def ad_keyboard(uuid: int, t: Callable) -> InlineKeyboardMarkup:
+def ad_keyboard(uuid: Union[int, str],
+                t: Callable) -> types.InlineKeyboardMarkup:
     """Approve/Deny access request inline keyboard constructor.
 
-    :param uuid: int - user's telegram id
+    :param uuid: Union[int, str] - user's telegram id
     :param t: Callable - translator
     :return: InlineKeyboardMarkup - ready-to-use keyboard
     """
@@ -25,10 +26,11 @@ def ad_keyboard(uuid: int, t: Callable) -> InlineKeyboardMarkup:
     })
 
 
-def revoke_keyboard(uuid: int, t: Callable) -> InlineKeyboardMarkup:
+def revoke_keyboard(uuid: Union[int, str],
+                    t: Callable) -> types.InlineKeyboardMarkup:
     """Revoke access inline keyboard constructor.
 
-    :param uuid: int - user's telegram id
+    :param uuid: Union[int, str] - user's telegram id
     :param t: Callable - translator
     :return: InlineKeyboardMarkup - ready-to-use keyboard
     """

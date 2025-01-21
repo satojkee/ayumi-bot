@@ -1,16 +1,17 @@
 import re
 import functools
-from typing import Callable, Any, Optional
+from typing import Callable, Any, Optional, Union
 
+from telebot import types
+from telebot.util import user_link
 from openai import BadRequestError
-from telebot.types import Message
 
 from ayumi import logger
 from ayumi.loc import get_translator
 from ayumi.bot import session
 from ayumi.db.repository import UserRepo
 from ayumi.bot.props import T, ParseMode, Pattern
-from ayumi.config import TELEGRAM_OWNER_ID, TELEGRAM_OWNER_USERNAME
+from ayumi.config import TELEGRAM_OWNER_ID
 
 
 __all__ = (
@@ -19,14 +20,32 @@ __all__ = (
     'trace_input',
     'authenticate',
     'extract_prompt',
-    'processing_prompt_message'
+    'processing_prompt_message',
+    'get_user'
 )
 
 
-async def processing_prompt_message(message: Message, _: Callable) -> Message:
+async def get_user(uuid: Union[int, str]) -> types.User:
+    """Use it to get a `types.User` instance by its telegram id.
+
+    There's no a direct way to get `User` instance by its telegram id, using
+        API provided by telegram.
+    It's kinda abuse to get a chat member of a private chat (not a group)
+        and extract a `types.User` instance from a `types.ChatMember` instance.
+
+    :param uuid: Union[int, str] - user's telegram id
+    :return: types.User - `types.User` instance
+    """
+    cm = await session.get_chat_member(uuid, uuid)
+
+    return cm.user
+
+
+async def processing_prompt_message(message: types.Message,
+                                    _: Callable) -> types.Message:
     """Reply to message with `T.Common.processing`.
 
-    :param message: Message - Message object
+    :param message: types.Message - Message object
     :param _: Callable - translator func
     :return: None
     """
@@ -36,7 +55,7 @@ async def processing_prompt_message(message: Message, _: Callable) -> Message:
 
 async def get_api_response(func: Callable, t: Callable,
                            *args: Any, **kwargs: Any) -> str:
-    """OpenAI APi request wrapper. Used to handle errors and format response.
+    """OpenAI API request wrapper. Used to handle errors and format response.
 
     :param func: Callable - API request function
     :param t: Callable - translator func
@@ -54,6 +73,15 @@ async def get_api_response(func: Callable, t: Callable,
     return t(T.Error.api)
 
 
+def extract_prompt(message: types.Message) -> str:
+    """Use it to extract user's prompt from the message text.
+
+    :param message: types.Message - Message object
+    :return: str - user's prompt
+    """
+    return re.sub(Pattern.gen_request, '', message.text).strip()
+
+
 def auto_translator(func: Callable) -> Any:
     """Use it as decorator for telebot handlers.
     Automatically identifies preferred language and injects proper translator.
@@ -61,7 +89,7 @@ def auto_translator(func: Callable) -> Any:
     Usage:
         @bot.message_handler(...)
         @auto_translator
-        def my_handler(message: Message, _: Any) -> None:
+        def my_handler(message: types.Message, _: Any) -> None:
             _('my.translation') # returns a translated string (IF provided)
 
     :return: Any
@@ -83,7 +111,7 @@ def trace_input(func: Callable) -> Any:
     Usage:
         @bot.message_handler(...)
         @trace_input
-        def my_handler(message: Message, ...) -> None:
+        def my_handler(message: types.Message, ...) -> None:
            ...
 
     :return: Any
@@ -107,7 +135,7 @@ def authenticate(admin_only: Optional[bool] = False) -> Any:
     Usage:
         @bot.message_handler(...)
         @authenticate
-        def my_handler(message: Message, auth: bool, ...) -> None:
+        def my_handler(message: types.Message, auth: bool, ...) -> None:
            ...
 
     :return: Any
@@ -121,30 +149,24 @@ def authenticate(admin_only: Optional[bool] = False) -> Any:
             auth = uuid == TELEGRAM_OWNER_ID
             if not admin_only:
                 auth = auth or await UserRepo.get(uuid=uuid)
-            # if user is authenticated -> decorated function
-            # if not -> permissions violation
+
+            # handler won't be executed if `auth = False`
+            # user receives a `T.Error.permissions` message in that case
             if auth:
                 return await func(*args, **kwargs)
             else:
+                admin_profile = await get_user(TELEGRAM_OWNER_ID)
+                # send `not enough permissions` message
                 await session.send_message(
                     chat_id=uuid,
                     parse_mode=ParseMode.html,
                     text=(
                         get_translator(args[0].from_user.language_code)
                         (T.Error.permissions)
-                        .format(admin=TELEGRAM_OWNER_USERNAME)
+                        .format(admin=user_link(admin_profile))
                     )
                 )
 
         return wrapper
 
     return decorator
-
-
-def extract_prompt(message: Message) -> str:
-    """Use it to extract user's prompt from the message text.
-
-    :param message: Message - Message object
-    :return: str - user's prompt
-    """
-    return re.sub(Pattern.gen_request, '', message.text).strip()

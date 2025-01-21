@@ -93,5 +93,5 @@ msgstr "😢 Something went wrong during API request. Please, try again "
 msgid "error.permissions"
 msgstr ""
 "⚠️ Not enough permissions :c\n"
-"For additional information, contact: @{admin}"
+"For additional information, contact: {admin}"
 

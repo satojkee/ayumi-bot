@@ -1,6 +1,6 @@
 from typing import Callable
 
-from telebot.types import Message
+from telebot import types
 
 from ayumi.loc import *
 from ayumi.bot import session
@@ -19,10 +19,10 @@ __all__ = (
 @session.message_handler(commands=Command.help + Command.start)
 @auto_translator
 @trace_input
-async def help_handler(message: Message, _: Callable) -> None:
+async def help_handler(message: types.Message, _: Callable) -> None:
     """Help command handler.
 
-    :param message: Message - Message object
+    :param message: types.Message - Message object
     :param _: Callable - translator func
     :return: None
     """
@@ -40,18 +40,17 @@ async def help_handler(message: Message, _: Callable) -> None:
 @session.message_handler(commands=Command.request_access)
 @auto_translator
 @trace_input
-async def request_access_handler(message: Message, _: Callable) -> None:
+async def request_access_handler(message: types.Message, _: Callable) -> None:
     """request_access command handler.
 
-    :param message: Message - Message object
+    :param message: types.Message - Message object
     :param _: Callable - translator func
     :return: None
     """
     # it's kinda abuse, because there's no way
     # to get `User` instance by its telegram id
-    admin_chat = await session.get_chat_member(TELEGRAM_OWNER_ID,
-                                               TELEGRAM_OWNER_ID)
-    admin_t = get_translator(admin_chat.user.language_code)
+    admin_profile = await get_user(TELEGRAM_OWNER_ID)
+    admin_t = get_translator(admin_profile.language_code)
     # use `admin_t` for admin and `_` for user
     await session.reply_to(message=message, text=_(T.Access.pending))
     await session.send_message(
