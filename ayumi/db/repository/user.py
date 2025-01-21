@@ -1,4 +1,4 @@
-from typing import Any, Optional, Iterable
+from typing import Any, Optional, Iterable, Union
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,11 +27,12 @@ class UserRepo:
 
     @staticmethod
     @provider
-    async def get(session: AsyncSession, uuid: int) -> Optional[User]:
+    async def get(session: AsyncSession,
+                  uuid: Union[int, str]) -> Optional[User]:
         """Use it to get a `User` instance by its telegram id.
 
         :param session: AsyncSession - db session
-        :param uuid: int - user's uuid
+        :param uuid: Union[int, str] - user's uuid
         :return: Optional[User]
         """
         result = await session.execute(select(User).filter_by(uuid=uuid))
@@ -52,11 +53,12 @@ class UserRepo:
 
     @classmethod
     @provider
-    async def delete(cls, session: AsyncSession, uuid: int) -> None:
+    async def delete(cls, session: AsyncSession,
+                     uuid: Union[int, str]) -> None:
         """Use it to remove a `User` instance by its telegram id.
 
         :param session: AsyncSession - db session
-        :param uuid: int - user's uuid
+        :param uuid: Union[int, str] - user's uuid
         :return: None
         """
         instance = await cls.get(session=session, uuid=uuid)
