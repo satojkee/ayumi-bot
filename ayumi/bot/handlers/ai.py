@@ -37,11 +37,8 @@ async def ai_text_handler(message: Message, _: Callable) -> None:
     """
     pm_ = await processing_prompt_message(message, _)
     # wait for OpenAI API response
-    response = await get_api_response(
-        func=generate_text,
-        t=_,
-        prompt=extract_prompt(message)
-    )
+    response = await get_api_response(func=generate_text,
+                                      t=_, prompt=extract_prompt(message))
     # edit `processing` message with generated response
     await session.edit_message_text(
         chat_id=message.chat.id,
@@ -65,11 +62,8 @@ async def ai_imagegen_handler(message: Message, _: Callable) -> None:
     """
     pm_ = await processing_prompt_message(message, _)
     # wait for OpenAI API response
-    response = await get_api_response(
-        func=generate_image,
-        t=_,
-        prompt=extract_prompt(message)
-    )
+    response = await get_api_response(func=generate_image,
+                                      t=_, prompt=extract_prompt(message))
     # send image if succeeded, else -> notify about error
     if response.startswith('https://'):
         # remove `T.Common.processing` message
@@ -105,17 +99,15 @@ async def ai_speech_to_text_handler(message: Message, _: Callable) -> None:
     # output file extension -> .ogg
     f_info = await session.get_file(message.voice.file_id)
     f_data = await session.download_file(f_info.file_path)
+    # use '.ogg' for telegram voice files
     f_path = os.path.join(app_config.common.temp, f'{f_info.file_id}.ogg')
 
     with open(f_path, 'wb+') as handler:
         handler.write(f_data)
         # wait for OpenAI API response
-        response = await get_api_response(
-            func=speech_to_text,
-            t=_,
-            handler=handler
-        )
-    # replace `T.Common.processing` message with extracted text
+        response = await get_api_response(func=speech_to_text,
+                                          t=_, handler=handler)
+    # replace `T.Common.processing` message with transcription
     await session.edit_message_text(
         chat_id=message.chat.id,
         message_id=pm_.message_id,
@@ -138,12 +130,10 @@ async def ai_text_inline_handler(query: InlineQuery, _: Callable) -> None:
     :param _: Callable - translator func
     :return: None
     """
-    response = await get_api_response(
-        func=generate_text,
-        t=_,
-        prompt=query.query
-    )
+    response = await get_api_response(func=generate_text,
+                                      t=_, prompt=query.query)
     # answer inline query with response
+    # set `cache_time=0`, because we don't need it
     await session.answer_inline_query(
         inline_query_id=query.id,
         cache_time=0,
