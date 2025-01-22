@@ -1,13 +1,13 @@
 # Ukrainian translations for PROJECT.
-# Copyright (C) 2025 ORGANIZATION
+# Copyright (C) 2025 satojkee
 # This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+# FIRST AUTHOR <satojkee@gmail.com>, 2025.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-17 11:38+0200\n"
+"POT-Creation-Date: 2025-01-22 10:55+0200\n"
 "PO-Revision-Date: 2025-01-02 12:52+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
@@ -19,11 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.0\n"
 
-#: ayumi/bot/props.py:33
-msgid "common.start"
-msgstr "Привіт, <b>{first_name}</b>!"
-
-#: ayumi/bot/props.py:34
+#: ayumi/bot/props.py:38
 msgid "common.help"
 msgstr ""
 "Привіт, <b>{first_name}</b>!\n"
@@ -43,57 +39,61 @@ msgstr ""
 "<b>Голос у текст</b>\n"
 "Просто перешли голосове повідомлення, транскрипцію якого хочеш отримати"
 
-#: ayumi/bot/props.py:35
+#: ayumi/bot/props.py:39
 msgid "common.access_request"
 msgstr ""
 "Запит доступу від @{username} | [{uuid}]\n"
 "Оберіть дію знизу"
 
-#: ayumi/bot/props.py:36
+#: ayumi/bot/props.py:40
 msgid "common.processing"
 msgstr "Опрацьовую твій запит 🕒"
 
-#: ayumi/bot/props.py:37
+#: ayumi/bot/props.py:41
 msgid "common.user_profile"
 msgstr ""
 "Користувач: {user}\n"
 "Додано: <code>{created}</code>"
 
-#: ayumi/bot/props.py:38
+#: ayumi/bot/props.py:42
 msgid "common.inline_title"
 msgstr "Моя відповідь на \"{query}\""
 
-#: ayumi/bot/props.py:41
+#: ayumi/bot/props.py:45
 msgid "access.granted"
-msgstr "Ура, тепер ти мій друг/подруга ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧"
+msgstr "Рівень доступу: <b>{level}</b> надано ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧ "
 
-#: ayumi/bot/props.py:42
+#: ayumi/bot/props.py:46
 msgid "access.refused"
 msgstr "Я не хочу дружити з тобою 😢"
 
-#: ayumi/bot/props.py:43
+#: ayumi/bot/props.py:47
 msgid "access.pending"
 msgstr "Я подумаю, але дам тобі знати, як закінчу ≽^•⩊•^≼"
 
-#: ayumi/bot/props.py:46
-msgid "adk.approve"
-msgstr "Надати ✔️"
-
-#: ayumi/bot/props.py:47
-msgid "adk.deny"
-msgstr "Відхилити ❌"
-
-#: ayumi/bot/props.py:48
-msgid "adk.revoke"
-msgstr "Позбавити доступу ⚠️"
-
-#: ayumi/bot/props.py:51
+#: ayumi/bot/props.py:50
 msgid "error.api"
 msgstr "Щось не так з запитом до API серверу. Будь ласка, спробуй ще раз."
 
-#: ayumi/bot/props.py:52
+#: ayumi/bot/props.py:51
 msgid "error.permissions"
 msgstr ""
 "⚠️ Недостатньо прав для цієї дії\n"
 "Для додаткової інформації, звернися до: {admin}"
+
+#: ayumi/bot/props.py:52
+msgid "error.auth"
+msgstr "Помилка авторизації. Будь ласка, спробуй ще раз."
+
+#: ayumi/bot/props.py:55
+msgid "access_keyboard.highlighted"
+msgstr "Рівень {value} 🌟"
+
+#: ayumi/bot/props.py:56
+msgid "access_keyboard.level"
+msgstr "Рівень {value}"
+
+#: ayumi/bot/props.py:57
+msgid "access_keyboard.deny"
+msgstr "Відмовити ❌"
 

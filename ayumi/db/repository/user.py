@@ -65,3 +65,24 @@ class UserRepo:
         if instance:
             await session.delete(instance)
             await session.commit()
+
+    @classmethod
+    @provider
+    async def update(cls, session: AsyncSession,
+                     uuid: Union[int, str], **kwargs: Any) -> None:
+        """Use it to update an already existing `User` instance.
+
+        :param session: AsyncSession - db session
+        :param uuid: Union[int, str] - user's uuid
+        :param kwargs: Any - user data
+        :return: None
+        """
+        instance = await cls.get(session=session, uuid=uuid)
+        if instance:
+            for key, value in kwargs.items():
+                setattr(instance, key, value)
+
+            await session.commit()
+        else:
+            # if the user doesn't exist, create a new one
+            await cls.create(session=session, uuid=uuid, **kwargs)

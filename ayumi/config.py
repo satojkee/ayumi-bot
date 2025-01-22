@@ -1,4 +1,5 @@
 import toml
+import tempfile
 from environs import Env
 from munch import DefaultMunch
 
@@ -10,6 +11,7 @@ __all__ = (
     'TELEGRAM_BOT_NAME',
     'OPENAI_SECRET_KEY',
     'OPENAI_PROJECT_ID',
+    'TEMP_DIR',
     'app_config'
 )
 
@@ -30,6 +32,8 @@ DATABASE_URI: str = env.str('DATABASE_URI')
 OPENAI_SECRET_KEY: str = env.str('OPENAI_SECRET_KEY')
 # OpenAI Project ID
 OPENAI_PROJECT_ID: str = env.str('OPENAI_PROJECT_ID')
+# Temp dir location
+TEMP_DIR: str = tempfile.gettempdir()
 
 
 # Load app config (app_config.toml) file

@@ -15,7 +15,7 @@
 - Speech-to-text ✔️
 - Inline mode support ✔️
 - Private chat support ✔️
-- Access management system ✔️
+- Access management system with different levels of access ✔️
 - Group chat support `coming soon`
 
 <img alt="preview" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExb282OXY5eHI2Z25kOXRzY2RneWI4amszeTV3cHY2anlqN3dib3FkdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VmfOoHbB3rzhHpvsRe/giphy.gif" />
@@ -62,10 +62,23 @@ pip3 install -r requirements.txt
 
 ### Edit `app_config.toml` if needed
 > For example, you can replace the `gpt-4o-mini` text-model with `gpt-3.5-turbo` or `gpt-4o`, **but don't forget to enable this model in your project settings on OpenAI platform**
+> ### Explanation
+> * `security` - currently, has 3 levels of access  `1` - text generation + inline mode | `2` - speech-to-text | `3` - image generation
+> * `sqlalchemy` - supports all **SQLAlchemy.create_async_engine** function params
+> * `locale` - only contains a list of supported languages
+> * `locale.translator` - supports all `gettext.translation` function params
+> * `logger` - only supports **level** option
+> * `openai` - only supports **directive** option
+> * `openai.text` - supports all **openai.chat.completion.create** function params
+> * `openai.image` - supports all **openai.images.generate** function params
+> * `openai.speech_to_text` - supports all **openai.audio.transcriptions.create** function params
+> * `inline.query` - only supports **min_len** option
 
 ```toml
-[common]
-temp = "temp"
+[security]
+levels = [1, 2, 3]
+default = 1
+zero = 0
 
 [sqlalchemy]
 pool_pre_ping = false

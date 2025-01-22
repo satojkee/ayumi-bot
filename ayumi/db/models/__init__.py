@@ -1,2 +1,2 @@
-from .user import User
-from ._base import BaseModel
+from .user import *
+from ._base import *

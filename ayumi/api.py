@@ -16,14 +16,12 @@ __all__ = (
 )
 
 
-client = openai.AsyncClient(
-    api_key=OPENAI_SECRET_KEY,
-    project=OPENAI_PROJECT_ID
-)
+client = openai.AsyncClient(api_key=OPENAI_SECRET_KEY,
+                            project=OPENAI_PROJECT_ID)
 
 
 async def generate_text(prompt: str) -> str:
-    """Use it to make a request to OpenAI API to get AI-response.
+    """Use it to generate an AI-text from a text prompt.
 
     :param prompt: str - input data
     :return: str - output data
@@ -45,16 +43,14 @@ async def generate_image(prompt: str) -> str:
     :param prompt: str - input data
     :return: str - image url
     """
-    response = await client.images.generate(
-        prompt=prompt,
-        **app_config.openai.image
-    )
+    response = await client.images.generate(prompt=prompt,
+                                            **app_config.openai.image)
 
     return response.data[0].url
 
 
 async def speech_to_text(handler: BufferedReader) -> str:
-    """Use it to extract text from an audio file.
+    """Use it to transcribe an audio file.
 
     :param handler: BufferedReader - audio file handler
     :return: str - extracted text
