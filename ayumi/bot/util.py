@@ -1,6 +1,6 @@
 import re
 import functools
-from typing import Callable, Any, Union
+from typing import Callable, Any, Union, Optional
 
 from telebot import types
 from telebot.util import user_link
@@ -126,7 +126,8 @@ def trace_input(func: Callable) -> Any:
     return wrapper
 
 
-def authenticate(level: int = app_config.security.default) -> Any:
+def authenticate(level: int = app_config.security.default,
+                 admin_only: Optional[bool] = False) -> Any:
     """Use it as decorator for telebot handlers.
     Apply for each handler where user authentication is required.
 
@@ -137,6 +138,7 @@ def authenticate(level: int = app_config.security.default) -> Any:
            ...
 
     :param level: int - minimal required access level
+    :param admin_only: Optional[bool] - if True, only admin can access
     :return: Any
     """
     def decorator(func: Callable) -> Any:
@@ -157,7 +159,7 @@ def authenticate(level: int = app_config.security.default) -> Any:
                 # admin is always authenticated
                 # if not admin, check access level
                 auth = tg_user.id == TELEGRAM_OWNER_ID
-                if not auth:
+                if not auth and not admin_only:
                     user_ = await UserRepo.get(uuid=tg_user.id)
                     auth = user_ is not None and user_.level >= level
 

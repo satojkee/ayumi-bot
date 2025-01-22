@@ -55,7 +55,7 @@ async def access_callback(call: types.CallbackQuery) -> None:
 
 
 @session.message_handler(commands=Command.users)
-@authenticate(level=app_config.security.levels[-1])
+@authenticate(admin_only=True)
 @auto_translator
 @trace_input
 async def get_users_handler(message: types.Message, _: Callable) -> None:
