@@ -1,5 +1,7 @@
-[common]
-temp = "temp"
+[security]
+levels = [1, 2, 3]
+default = 1
+zero = 0
 
 [sqlalchemy]
 pool_pre_ping = false

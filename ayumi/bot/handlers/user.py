@@ -49,13 +49,13 @@ async def request_access_handler(message: types.Message, _: Callable) -> None:
     """
     # it's kinda abuse, because there's no way
     # to get `User` instance by its telegram id
-    admin_profile = await get_user(TELEGRAM_OWNER_ID)
-    admin_t = get_translator(admin_profile.language_code)
+    tg_admin = await get_user(TELEGRAM_OWNER_ID)
+    admin_t = get_translator(tg_admin.language_code)
     # use `admin_t` for admin and `_` for user
     await session.reply_to(message=message, text=_(T.Access.pending))
     await session.send_message(
         chat_id=TELEGRAM_OWNER_ID,
-        reply_markup=ad_keyboard(message.from_user.id, admin_t),
+        reply_markup=access_keyboard(uuid=message.from_user.id, t=_),
         parse_mode=ParseMode.html,
         text=admin_t(T.Common.access_request).format(
             username=message.from_user.username,

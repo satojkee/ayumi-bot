@@ -1,6 +1,6 @@
 import re
 import functools
-from typing import Callable, Any, Optional, Union
+from typing import Callable, Any, Union
 
 from telebot import types
 from telebot.util import user_link
@@ -11,7 +11,7 @@ from ayumi.loc import get_translator
 from ayumi.bot import session
 from ayumi.db.repository import UserRepo
 from ayumi.bot.props import T, ParseMode, Pattern
-from ayumi.config import TELEGRAM_OWNER_ID
+from ayumi.config import TELEGRAM_OWNER_ID, app_config
 
 
 __all__ = (
@@ -53,12 +53,10 @@ async def processing_prompt_message(message: types.Message,
                                   text=_(T.Common.processing))
 
 
-async def get_api_response(func: Callable, t: Callable,
-                           *args: Any, **kwargs: Any) -> str:
+async def get_api_response(func: Callable, *args: Any, **kwargs: Any) -> str:
     """OpenAI API request wrapper. Used to handle errors and format response.
 
     :param func: Callable - API request function
-    :param t: Callable - translator func
     :param args: Any - API request arguments
     :param kwargs: Any - API request keyword arguments
     :return: str - response as text
@@ -70,7 +68,7 @@ async def get_api_response(func: Callable, t: Callable,
     except Exception as e:
         logger.error(f'Unknown error raised during API request.', e)
 
-    return t(T.Error.api)
+    return T.Error.api
 
 
 def extract_prompt(message: types.Message) -> str:
@@ -89,7 +87,7 @@ def auto_translator(func: Callable) -> Any:
     Usage:
         @bot.message_handler(...)
         @auto_translator
-        def my_handler(message: types.Message, _: Any) -> None:
+        def my_handler(message: types.Message, _: Callable) -> None:
             _('my.translation') # returns a translated string (IF provided)
 
     :return: Any
@@ -128,44 +126,55 @@ def trace_input(func: Callable) -> Any:
     return wrapper
 
 
-def authenticate(admin_only: Optional[bool] = False) -> Any:
+def authenticate(level: int = app_config.security.default) -> Any:
     """Use it as decorator for telebot handlers.
     Apply for each handler where user authentication is required.
 
     Usage:
         @bot.message_handler(...)
-        @authenticate
-        def my_handler(message: types.Message, auth: bool, ...) -> None:
+        @authenticate(level=...)
+        def my_handler(message: types.Message, ...) -> None:
            ...
 
+    :param level: int - minimal required access level
     :return: Any
     """
     def decorator(func: Callable) -> Any:
         @functools.wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> Any:
-            uuid = args[0].from_user.id
-            # check if user is the admin
-            # if not, and admin_only flag is set to `False` -> check in db
-            auth = uuid == TELEGRAM_OWNER_ID
-            if not admin_only:
-                auth = auth or await UserRepo.get(uuid=uuid)
+            tg_user = args[0].from_user
+            # create proper translator
+            t = get_translator(tg_user.language_code)
 
-            # handler won't be executed if `auth = False`
-            # user receives a `T.Error.permissions` message in that case
-            if auth:
-                return await func(*args, **kwargs)
-            else:
-                admin_profile = await get_user(TELEGRAM_OWNER_ID)
-                # send `not enough permissions` message
-                await session.send_message(
-                    chat_id=uuid,
-                    parse_mode=ParseMode.html,
-                    text=(
-                        get_translator(args[0].from_user.language_code)
-                        (T.Error.permissions)
-                        .format(admin=user_link(admin_profile))
-                    )
+            if level not in app_config.security.levels:
+                logger.warning(
+                    f'undefined access level: "{level}" in "{func.__name__}"'
                 )
+                # send error message in telegram
+                await session.send_message(chat_id=tg_user.id,
+                                           text=t(T.Error.auth))
+            else:
+                # admin is always authenticated
+                # if not admin, check access level
+                auth = tg_user.id == TELEGRAM_OWNER_ID
+                if not auth:
+                    user_ = await UserRepo.get(uuid=tg_user.id)
+                    auth = user_ is not None and user_.level >= level
+
+                if auth:
+                    return await func(*args, **kwargs)
+                else:
+                    tg_admin = await get_user(TELEGRAM_OWNER_ID)
+                    # send `T.Error.permissions` message
+                    # with administrator link
+                    await session.send_message(
+                        chat_id=tg_user.id,
+                        parse_mode=ParseMode.html,
+                        text=(
+                            t(T.Error.permissions)
+                            .format(admin=user_link(tg_admin))
+                        )
+                    )
 
         return wrapper
 

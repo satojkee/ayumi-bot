@@ -1,6 +1,6 @@
 from gettext import gettext
 
-from ayumi.config import TELEGRAM_BOT_NAME
+from ayumi.config import TELEGRAM_BOT_NAME, app_config
 
 
 __all__ = (
@@ -11,6 +11,13 @@ __all__ = (
     'Format',
     'ContentType'
 )
+
+
+# substring to use in `Pattern.access` to filter inline keyboards callback
+slp = '|'.join([
+    str(lvl)
+    for lvl in app_config.security.levels + [app_config.security.zero]
+])
 
 
 class ParseMode:
@@ -29,7 +36,6 @@ class Command:
 class T:
     """Define translations here."""
     class Common:
-        start: str = gettext('common.start')
         help: str = gettext('common.help')
         access_request: str = gettext('common.access_request')
         processing: str = gettext('common.processing')
@@ -41,19 +47,20 @@ class T:
         refused: str = gettext('access.refused')
         pending: str = gettext('access.pending')
 
-    class ADKeyboard:
-        approve: str = gettext('adk.approve')
-        deny: str = gettext('adk.deny')
-        revoke: str = gettext('adk.revoke')
-
     class Error:
         api: str = gettext('error.api')
         permissions: str = gettext('error.permissions')
+        auth: str = gettext('error.auth')
+
+    class AccessKeyboard:
+        highlighted: str = gettext('access_keyboard.highlighted')
+        level: str = gettext('access_keyboard.level')
+        deny: str = gettext('access_keyboard.deny')
 
 
 class Pattern:
     """Define patterns here."""
-    access: str = r'\d*:(0|1)\Z'
+    access: str = fr'\d*:({slp})\Z'
     gen_image: str = fr'\A({TELEGRAM_BOT_NAME}@i).*'
     gen_text: str = fr'\A{TELEGRAM_BOT_NAME}[^@].*'
     gen_request: str = fr'\A{TELEGRAM_BOT_NAME}(@i)*\W*'
@@ -61,7 +68,7 @@ class Pattern:
 
 class Format:
     """Define formats here."""
-    access: str = '{uuid}:{state}'
+    access: str = '{uuid}:{level}'
 
 
 class ContentType:

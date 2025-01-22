@@ -7,7 +7,7 @@ from ayumi.bot import session
 from ayumi.api import *
 from ayumi.bot.util import *
 from ayumi.bot.props import *
-from ayumi.config import app_config
+from ayumi.config import app_config, TEMP_DIR
 
 
 __all__ = (
@@ -20,7 +20,7 @@ __all__ = (
 
 @session.message_handler(content_types=ContentType.text,
                          regexp=Pattern.gen_text)
-@authenticate()
+@authenticate(level=1)
 @auto_translator
 @trace_input
 async def ai_text_handler(message: types.Message, _: Callable) -> None:
@@ -33,19 +33,19 @@ async def ai_text_handler(message: types.Message, _: Callable) -> None:
     pm_ = await processing_prompt_message(message, _)
     # wait for OpenAI API response
     response = await get_api_response(func=generate_text,
-                                      t=_, prompt=extract_prompt(message))
+                                      prompt=extract_prompt(message))
     # edit `processing` message with generated response
     await session.edit_message_text(
         chat_id=message.chat.id,
         message_id=pm_.message_id,
-        text=response,
+        text=_(response),
         parse_mode=ParseMode.markdown
     )
 
 
 @session.message_handler(content_types=ContentType.text,
                          regexp=Pattern.gen_image)
-@authenticate()
+@authenticate(level=3)
 @auto_translator
 @trace_input
 async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
@@ -58,7 +58,7 @@ async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
     pm_ = await processing_prompt_message(message, _)
     # wait for OpenAI API response
     response = await get_api_response(func=generate_image,
-                                      t=_, prompt=extract_prompt(message))
+                                      prompt=extract_prompt(message))
     # send image if succeeded, else -> notify about error
     if response.startswith('https://'):
         # remove `T.Common.processing` message
@@ -67,19 +67,19 @@ async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
         # send generated image
         await session.send_photo(
             chat_id=message.chat.id,
-            photo=response,
+            photo=_(response),
             reply_to_message_id=message.message_id
         )
     else:
         await session.edit_message_text(
             chat_id=message.chat.id,
             message_id=pm_.message_id,
-            text=response
+            text=_(response)
         )
 
 
 @session.message_handler(content_types=ContentType.voice)
-@authenticate()
+@authenticate(level=2)
 @auto_translator
 @trace_input
 async def ai_speech_to_text_handler(message: types.Message, _: Callable) -> None:
@@ -95,18 +95,18 @@ async def ai_speech_to_text_handler(message: types.Message, _: Callable) -> None
     f_info = await session.get_file(message.voice.file_id)
     f_data = await session.download_file(f_info.file_path)
     # use '.ogg' for telegram voice files
-    f_path = os.path.join(app_config.common.temp, f'{f_info.file_id}.ogg')
+    f_path = os.path.join(TEMP_DIR, f'{f_info.file_id}.ogg')
 
     with open(f_path, 'wb+') as handler:
         handler.write(f_data)
         # wait for OpenAI API response
         response = await get_api_response(func=speech_to_text,
-                                          t=_, handler=handler)
+                                          handler=handler)
     # replace `T.Common.processing` message with transcription
     await session.edit_message_text(
         chat_id=message.chat.id,
         message_id=pm_.message_id,
-        text=response
+        text=_(response)
     )
     # remove file from temp
     os.remove(f_path)
@@ -115,7 +115,7 @@ async def ai_speech_to_text_handler(message: types.Message, _: Callable) -> None
 @session.inline_handler(
     func=lambda q: len(q.query) > app_config.inline.query.min_len
 )
-@authenticate()
+@authenticate(level=1)
 @auto_translator
 @trace_input
 async def ai_text_inline_handler(query: types.InlineQuery, _: Callable) -> None:
@@ -126,7 +126,7 @@ async def ai_text_inline_handler(query: types.InlineQuery, _: Callable) -> None:
     :return: None
     """
     response = await get_api_response(func=generate_text,
-                                      t=_, prompt=query.query)
+                                      prompt=query.query)
     # answer inline query with response
     # set `cache_time=0`, because we don't need it
     await session.answer_inline_query(
@@ -135,10 +135,10 @@ async def ai_text_inline_handler(query: types.InlineQuery, _: Callable) -> None:
         results=[
             types.InlineQueryResultArticle(
                 id=query.id,
-                description=response,
+                description=_(response),
                 title=_(T.Common.inline_title).format(query=query.query),
                 input_message_content=types.InputTextMessageContent(
-                    message_text=response,
+                    message_text=_(response),
                     parse_mode=ParseMode.markdown
                 )
             )
