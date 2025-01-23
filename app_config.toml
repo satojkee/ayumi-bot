@@ -1,7 +1,12 @@
 [security]
 levels = [1, 2, 3]
-default = 1
 zero = 0
+
+[security.ai]
+textgen = 1
+textgen_inline = 1
+speech_to_text = 2
+imagegen = 3
 
 [sqlalchemy]
 pool_pre_ping = false

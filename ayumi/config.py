@@ -1,5 +1,6 @@
-import toml
 import tempfile
+
+from toml import load
 from environs import Env
 from munch import DefaultMunch
 
@@ -38,4 +39,4 @@ TEMP_DIR: str = tempfile.gettempdir()
 
 # Load app config (app_config.toml) file
 with open('app_config.toml', 'r') as f:
-    app_config = DefaultMunch.fromDict(toml.load(f))
+    app_config = DefaultMunch.fromDict(load(f))

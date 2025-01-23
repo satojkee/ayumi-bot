@@ -3,11 +3,12 @@ from typing import Callable
 
 from telebot import types
 
-from ayumi.bot import session
 from ayumi.api import *
+from ayumi.config import app_config, TEMP_DIR
+from ayumi.bot import session
 from ayumi.bot.util import *
 from ayumi.bot.props import *
-from ayumi.config import app_config, TEMP_DIR
+from ayumi.bot.decorators import *
 
 
 __all__ = (
@@ -20,7 +21,7 @@ __all__ = (
 
 @session.message_handler(content_types=ContentType.text,
                          regexp=Pattern.gen_text)
-@authenticate(level=1)
+@auth_required(level=app_config.security.ai.textgen)
 @auto_translator
 @trace_input
 async def ai_text_handler(message: types.Message, _: Callable) -> None:
@@ -30,7 +31,7 @@ async def ai_text_handler(message: types.Message, _: Callable) -> None:
     :param _: Callable - translator func
     :return: None
     """
-    pm_ = await processing_prompt_message(message, _)
+    pm_ = await processing_message(message, _)
     # wait for OpenAI API response
     response = await get_api_response(func=generate_text,
                                       prompt=extract_prompt(message))
@@ -45,7 +46,7 @@ async def ai_text_handler(message: types.Message, _: Callable) -> None:
 
 @session.message_handler(content_types=ContentType.text,
                          regexp=Pattern.gen_image)
-@authenticate(level=3)
+@auth_required(level=app_config.security.ai.imagegen)
 @auto_translator
 @trace_input
 async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
@@ -55,7 +56,7 @@ async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
     :param _: Callable - translator func
     :return: None
     """
-    pm_ = await processing_prompt_message(message, _)
+    pm_ = await processing_message(message, _)
     # wait for OpenAI API response
     response = await get_api_response(func=generate_image,
                                       prompt=extract_prompt(message))
@@ -79,7 +80,7 @@ async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
 
 
 @session.message_handler(content_types=ContentType.voice)
-@authenticate(level=2)
+@auth_required(level=app_config.security.ai.speech_to_text)
 @auto_translator
 @trace_input
 async def ai_speech_to_text_handler(message: types.Message, _: Callable) -> None:
@@ -89,7 +90,7 @@ async def ai_speech_to_text_handler(message: types.Message, _: Callable) -> None
     :param _: Callable - translator func
     :return: None
     """
-    pm_ = await processing_prompt_message(message, _)
+    pm_ = await processing_message(message, _)
     # processing voice file using `telebot` features
     # output file extension -> .ogg
     f_info = await session.get_file(message.voice.file_id)
@@ -115,10 +116,11 @@ async def ai_speech_to_text_handler(message: types.Message, _: Callable) -> None
 @session.inline_handler(
     func=lambda q: len(q.query) > app_config.inline.query.min_len
 )
-@authenticate(level=1)
+@auth_required(level=app_config.security.ai.textgen_inline)
 @auto_translator
 @trace_input
-async def ai_text_inline_handler(query: types.InlineQuery, _: Callable) -> None:
+async def ai_text_inline_handler(query: types.InlineQuery,
+                                 _: Callable) -> None:
     """AI-text inline handler.
 
     :param query: types.InlineQuery - InlineQuery object

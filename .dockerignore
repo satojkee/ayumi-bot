@@ -1,8 +1,7 @@
 .idea/
+.git/
 .venv/
 **/__pycache__/
-logs/
-temp/
 
 .env
 *~

@@ -4,13 +4,14 @@ from typing import Callable
 from telebot import types
 from telebot.util import user_link, antiflood
 
-from ayumi.bot import session
 from ayumi.loc import *
+from ayumi.config import app_config
+from ayumi.db.repository import *
+from ayumi.bot import session
 from ayumi.bot.util import *
 from ayumi.bot.props import *
 from ayumi.bot.keyboard import *
-from ayumi.db.repository import *
-from ayumi.config import app_config
+from ayumi.bot.decorators import *
 
 
 __all__ = (
@@ -55,7 +56,7 @@ async def access_callback(call: types.CallbackQuery) -> None:
 
 
 @session.message_handler(commands=Command.users)
-@authenticate(admin_only=True)
+@auth_required(admin_only=True)
 @auto_translator
 @trace_input
 async def get_users_handler(message: types.Message, _: Callable) -> None:

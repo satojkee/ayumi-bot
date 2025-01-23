@@ -3,11 +3,12 @@ from typing import Callable
 from telebot import types
 
 from ayumi.loc import *
-from ayumi.bot import session
 from ayumi.config import TELEGRAM_OWNER_ID, TELEGRAM_BOT_NAME
+from ayumi.bot import session
 from ayumi.bot.util import *
 from ayumi.bot.props import *
 from ayumi.bot.keyboard import *
+from ayumi.bot.decorators import *
 
 
 __all__ = (
