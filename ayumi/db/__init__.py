@@ -2,13 +2,16 @@ from typing import Any, Callable
 
 from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
-    create_async_engine,
+    create_async_engine
 )
 
 from ayumi.config import DATABASE_URI, app_config
 
 
-__all__ = ('provider', 'init_schemas')
+__all__ = (
+    'provider',
+    'init_schemas',
+)
 
 
 # Engine is always used to create session (`AsyncSession` instances)
@@ -39,17 +42,31 @@ def provider(func: Callable) -> Any:
     return wrapper
 
 
-def init_schemas() -> None:
-    """Use it to re/create required schemas in the db."""
+def init_schemas(drop: bool = False) -> None:
+    """Use it to re/create required schemas in the db.
+
+    :param drop: bool - drop attached tables if set to `True`
+    :return: None
+    """
     import asyncio
 
     async def _init_schemas() -> None:
         from ayumi.db.models import BaseModel
 
-        async with engine.begin() as conn:
-            await conn.run_sync(BaseModel.metadata.drop_all)
-            await conn.run_sync(BaseModel.metadata.create_all)
+        try:
+            async with engine.begin() as conn:
+                if drop:
+                    await conn.run_sync(BaseModel.metadata.drop_all)
+                await conn.run_sync(BaseModel.metadata.create_all)
 
-        await engine.dispose()
+            await engine.dispose()
+
+        except Exception as e:
+            import sys
+            import logging
+
+            logging.getLogger(__name__).error(f'connection error: "{e}"')
+
+            sys.exit(-1)
 
     asyncio.run(_init_schemas())
