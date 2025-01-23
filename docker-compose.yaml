@@ -1,0 +1,35 @@
+services:
+  bot:
+    container_name: ayumi_bot
+    restart: always
+    build: .
+    environment:
+      TELEGRAM_TOKEN: $TELEGRAM_TOKEN
+      DATABASE_URI: $TEST_DATABASE_URI
+      TELEGRAM_OWNER_ID: $TELEGRAM_OWNER_ID
+      TELEGRAM_BOT_NAME: $TELEGRAM_BOT_NAME
+      OPENAI_PROJECT_ID: $OPENAI_PROJECT_ID
+      OPENAI_SECRET_KEY: $OPENAI_SECRET_KEY
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/data/postgres
+    env_file:
+      - .env
+
+volumes:
+  pgdata:
+    driver: local

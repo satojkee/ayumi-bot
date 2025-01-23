@@ -28,6 +28,8 @@
 * [SQLAlchemy](https://www.sqlalchemy.org/)
 * [BotFather](https://telegram.me/BotFather)
 * [GetIDsBot](https://t.me/getidsbot)
+* [PyBabel](https://babel.pocoo.org/en/latest/)
+* [PostgreSQL](https://www.postgresql.org/download/)
 
 
 ## Usage guide
@@ -49,36 +51,73 @@ pip3 install -r requirements.txt
 ### Configure environment variables
 > Set each property using `.env` file or via `cli`
 
-| Variable                  | Description             | Hint                                                                                                                        |
-|---------------------------|-------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| `DATABASE_URI`            | Database credentials    | PostgreSQL + asyncpg, format: `postgresql+asyncpg://postgres:...`                                                           |
-| `TELEGRAM_TOKEN`          | Telegram bot token      | visit [BotFather](https://t.me/BotFather) and create your own bot                                                           |
-| `TELEGRAM_OWNER_ID`       | Telegram admin id       | use [GetIDsBot](https://t.me/getidsbot) to get your account id                                                              |
-| `TELEGRAM_BOT_NAME`       | Telegram bot name       | this name is used as filter for prompts, e.g: `TELEGRAM_BOT_NAME, hello!` or `TELEGRAM_BOT_NAME@i, image of a cute kitten.` |
-| `OPENAI_PROJECT_ID`       | OpenAI project ID       | visit [OpenAI](https://platform.openai.com/settings/organization/projects) and create a new project                         |
-| `OPENAI_SECRET_KEY`       | OpenAI API token        | create a new `API-KEY` for a created project on OpenAI platform                                                             |
+#### Required variables
+| Variable            | Description          | Hint                                                                                                                                   |
+|---------------------|----------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| `DATABASE_URI`      | Database credentials | PostgreSQL + asyncpg, format: `postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}` |
+| `TELEGRAM_TOKEN`    | Telegram bot token   | visit [BotFather](https://t.me/BotFather) and create your own bot                                                                      |
+| `TELEGRAM_OWNER_ID` | Telegram admin id    | use [GetIDsBot](https://t.me/getidsbot) to get your account id                                                                         |
+| `TELEGRAM_BOT_NAME` | Telegram bot name    | this name is used as filter for prompts, e.g: `TELEGRAM_BOT_NAME, hello!` or `TELEGRAM_BOT_NAME@i, image of a cute kitten.`            |
+| `OPENAI_PROJECT_ID` | OpenAI project ID    | visit [OpenAI](https://platform.openai.com/settings/organization/projects) and create a new project                                    |
+| `OPENAI_SECRET_KEY` | OpenAI API token     | create a new `API-KEY` for a created project on OpenAI platform                                                                        |
 
+#### Additional variables
+> Used in [docker-compose](#docker-compose-postgresql--ayumibot) case, don't forget to build a `DATABASE_URI` in proper way \
+> Example: `postgresql+asyncpg://postgres:postgres_secret@postgres:5432/test_database`
+
+| Variable            | Description       | Hint                          |
+|---------------------|-------------------|-------------------------------|
+| `POSTGRES_USER`     | Database user     | `postgres` for example        |
+| `POSTGRES_PASSWORD` | Database password | `postgres_secret` for example |
+| `POSTGRES_DB`       | Database name     | `test_database` for example   |
 
 
 ### Edit `app_config.toml` if needed
 > For example, you can replace the `gpt-4o-mini` text-model with `gpt-3.5-turbo` or `gpt-4o`, **but don't forget to enable this model in your project settings on OpenAI platform**
+> 
 > ### Explanation
-> * `security` - currently, has 3 levels of access  `1` - text generation + inline mode | `2` - speech-to-text | `3` - image generation
-> * `sqlalchemy` - supports all **SQLAlchemy.create_async_engine** function params
-> * `locale` - only contains a list of supported languages
+>
+> * `security`
+>   * **levels** - a list of supported security levels in ascending order
+>   * **zero** - this value is used in **keyboard.access_keyboard** and **handlers.admin.access_callback** to represent negative access response
+>
+> * `security.ai` - define required security levels for AI features here
+>   * **textgen** - security level to access text generation feature
+>   * **textgen_inline** - security level to access text generation in inline mode
+>   * **speech_to_text** - security level to access speech-to-text feature
+>   * **imagegen** - security level to access image generation feature
+> 
+> * `inline.query`
+>   * **min_len** - min length of a prompt in **inline mode**
+> 
+> * `locale`
+>   * **languages** - a list of supported languages
+> 
+> * `logger`
+>   * **level** - logger level, supported levels: 
+>     - **DEBUG** - `default`
+>     - **INFO**
+>     - **WARNING**
+>     - **ERROR**
+>     - **CRITICAL**
+> * `openai`
+>   * **directive** - Answers the question: "How to act?", for **textgen** and **textgen_inline**
 > * `locale.translator` - supports all `gettext.translation` function params
-> * `logger` - only supports **level** option
-> * `openai` - only supports **directive** option
-> * `openai.text` - supports all **openai.chat.completion.create** function params
-> * `openai.image` - supports all **openai.images.generate** function params
-> * `openai.speech_to_text` - supports all **openai.audio.transcriptions.create** function params
-> * `inline.query` - only supports **min_len** option
+> * `openai.text` - supports all **openai.client.chat.completion.create** function params
+> * `openai.image` - supports all **openai.client.images.generate** function params
+> * `openai.speech_to_text` - supports all **openai.client.audio.transcriptions.create** function params
+> * `sqlalchemy` - supports all **SQLAlchemy.create_async_engine** function params
 
 ```toml
 [security]
 levels = [1, 2, 3]
-default = 1
 zero = 0
+
+[security.ai]
+textgen = 1
+textgen_inline = 1
+speech_to_text = 2
+imagegen = 3
 
 [sqlalchemy]
 pool_pre_ping = false
@@ -119,12 +158,11 @@ python main.py --help
 ```
 
 
-### Init database schemas
-> It's required to create necessary database schemas \
+### Recreate database schemas
 > **Current version of Ayumi supports only async version of `SQLAlchemy` (tested only with `PostgreSQL` database and `asyncpg` driver).**
 
 ```shell
-python main.py --init
+python main.py --reinit
 ```
 
 
@@ -141,17 +179,29 @@ python main.py
 
 
 ## Docker guide
-> Don't forget to set required variables in `Dockerfile` or directly in `docker run --env ...`
 
-### Build image
+### With remote `PostgreSQL` database
+> Don't forget to set [required](#required-variables) variables in `Dockerfile` or directly in `docker run --env ...`
+
+#### Build the image
 
 ```shell
 docker build -t ayumi .
 ```
 
-### Create container
+#### Create and start a container
 ```shell
 docker run --env ... ayumi
+```
+
+### Docker-compose `PostgreSQL + AyumiBot`
+Create `.env` file in the project **root** and configure all [required](#required-variables) + [additional](#additional-variables) variables.
+
+#### Build images and start containers
+> The `ayumi_bot` container may restart several times, due to the long `postgres` container init
+
+```shell
+docker-compose up -d
 ```
 
 
