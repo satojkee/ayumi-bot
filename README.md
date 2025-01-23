@@ -102,7 +102,7 @@ pip3 install -r requirements.txt
 >     - **CRITICAL**
 > * `openai`
 >   * **directive** - Answers the question: "How to act?", for **textgen** and **textgen_inline**
-> * `locale.translator` - supports all `gettext.translation` function params
+> * `locale.translator` - supports all **gettext.translation** function params
 > * `openai.text` - supports all **openai.client.chat.completion.create** function params
 > * `openai.image` - supports all **openai.client.images.generate** function params
 > * `openai.speech_to_text` - supports all **openai.client.audio.transcriptions.create** function params
