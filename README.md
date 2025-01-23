@@ -194,7 +194,7 @@ docker build -t ayumi .
 docker run --env ... ayumi
 ```
 
-### Docker-compose `PostgreSQL + AyumiBot`
+### Docker compose `PostgreSQL + AyumiBot`
 Create `.env` file in the project **root** and configure all [required](#required-variables) + [additional](#additional-variables) variables.
 
 #### Build images and start containers
