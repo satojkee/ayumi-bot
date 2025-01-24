@@ -1,3 +1,6 @@
+"""This module contains functions to work with OpenAI API."""
+
+
 from io import BufferedReader
 
 import openai
@@ -16,6 +19,7 @@ __all__ = (
 )
 
 
+# currently using AsyncClient instead of common sync `Client`
 client = openai.AsyncClient(api_key=OPENAI_SECRET_KEY,
                             project=OPENAI_PROJECT_ID)
 

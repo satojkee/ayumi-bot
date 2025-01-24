@@ -1,14 +1,17 @@
+"""This module contains handlers for user commands."""
+
+
 from typing import Callable
 
 from telebot import types
 
-from ayumi.loc import *
+from ayumi.loc import get_translator
 from ayumi.config import TELEGRAM_OWNER_ID, TELEGRAM_BOT_NAME
 from ayumi.bot import session
-from ayumi.bot.util import *
-from ayumi.bot.props import *
-from ayumi.bot.keyboard import *
-from ayumi.bot.decorators import *
+from ayumi.bot.util import get_user
+from ayumi.bot.props import Command, ParseMode, T
+from ayumi.bot.keyboard import access_keyboard
+from ayumi.bot.decorators import auto_translator, trace_input
 
 
 __all__ = (
@@ -21,7 +24,7 @@ __all__ = (
 @auto_translator
 @trace_input
 async def help_handler(message: types.Message, _: Callable) -> None:
-    """Help command handler.
+    """start + help commands handler.
 
     :param message: types.Message - Message object
     :param _: Callable - translator func

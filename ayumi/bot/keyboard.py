@@ -1,3 +1,6 @@
+"""This module contains functions that construct telegram keyboards."""
+
+
 from typing import Callable, Union, Optional
 
 from telebot import types
@@ -31,16 +34,18 @@ def access_keyboard(
         # add button to the layout
         layout.setdefault(
             t(key).format(value=level),
-            dict(callback_data=Format.access.format(uuid=uuid, level=level))
+            {'callback_data': Format.access.format(uuid=uuid, level=level)}
         )
 
     # additional `Deny` button, that should be the last one
     layout.setdefault(
         t(T.AccessKeyboard.deny),
-        dict(callback_data=Format.access.format(
-            uuid=uuid,
-            level=app_config.security.zero)
-        )
+        {
+            'callback_data': Format.access.format(
+                uuid=uuid,
+                level=app_config.security.zero
+            )
+        }
     )
 
     return quick_markup(layout, row_width=3)

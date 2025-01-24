@@ -1,6 +1,6 @@
-# Ukrainian translations for PROJECT.
+# Ukrainian translations for ayumi-bot.
 # Copyright (C) 2025 satojkee
-# This file is distributed under the same license as the PROJECT project.
+# This file is distributed under the same license as the ayumi-bot project.
 # FIRST AUTHOR <satojkee@gmail.com>, 2025.
 #
 msgid ""

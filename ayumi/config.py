@@ -1,3 +1,6 @@
+"""This module loads application configuration."""
+
+
 import tempfile
 
 from toml import load
@@ -38,5 +41,5 @@ TEMP_DIR: str = tempfile.gettempdir()
 
 
 # Load app config (app_config.toml) file
-with open('app_config.toml', 'r') as f:
+with open('app_config.toml', mode='r', encoding='utf-8') as f:
     app_config = DefaultMunch.fromDict(load(f))

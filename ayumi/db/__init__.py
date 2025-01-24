@@ -1,3 +1,6 @@
+"""Contains database related stuff."""
+
+
 from typing import Any, Callable
 
 from sqlalchemy.ext.asyncio import (
@@ -8,10 +11,7 @@ from sqlalchemy.ext.asyncio import (
 from ayumi.config import DATABASE_URI, app_config
 
 
-__all__ = (
-    'provider',
-    'init_schemas',
-)
+__all__ = ('provider', 'init_schemas')
 
 
 # Engine is always used to create session (`AsyncSession` instances)
@@ -65,7 +65,7 @@ def init_schemas(drop: bool = False) -> None:
             import sys
             import logging
 
-            logging.getLogger(__name__).error(f'connection error: "{e}"')
+            logging.getLogger(__name__).error('connection error: %s', e)
 
             sys.exit(-1)
 

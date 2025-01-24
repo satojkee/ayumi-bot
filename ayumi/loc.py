@@ -1,3 +1,6 @@
+"""This module contains a translation related functions."""
+
+
 from typing import Optional, Callable
 from gettext import translation
 

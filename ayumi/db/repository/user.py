@@ -1,3 +1,6 @@
+"""Contains `UserRepo` class with database operations over `User` model."""
+
+
 from typing import Any, Optional, Iterable, Union
 
 from sqlalchemy import select
@@ -11,6 +14,8 @@ __all__ = ('UserRepo',)
 
 
 class UserRepo:
+    """Contains all required database operations over `User` model."""
+
     @classmethod
     @provider
     async def create(cls, session: AsyncSession, **kwargs: Any) -> None:

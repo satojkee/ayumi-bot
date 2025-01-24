@@ -1,10 +1,12 @@
+"""This module contains useful functions to use in handlers."""
+
+
 import re
+import logging
 from typing import Callable, Any, Union
 
 from telebot import types
-from openai import BadRequestError
 
-from ayumi import logger
 from ayumi.bot import session
 from ayumi.bot.props import T, Pattern
 
@@ -15,6 +17,9 @@ __all__ = (
     'processing_message',
     'get_user'
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 async def get_user(uuid: Union[int, str]) -> types.User:
@@ -48,17 +53,15 @@ async def processing_message(message: types.Message,
 async def get_api_response(func: Callable, *args: Any, **kwargs: Any) -> str:
     """OpenAI API request wrapper. Used to handle errors and format response.
 
-    :param func: Callable - API request function
+    :param func: Callable - function
     :param args: Any - API request arguments
     :param kwargs: Any - API request keyword arguments
     :return: str - response as text
     """
     try:
         return await func(*args, **kwargs)
-    except BadRequestError:
-        logger.error('OpenAI aborted request due to bad params.')
     except Exception as e:
-        logger.error(f'Unknown error raised during API request.', e)
+        logger.error('something went wrong during API request, %s', e)
 
     return T.Error.api
 

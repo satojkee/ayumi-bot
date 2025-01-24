@@ -1,9 +1,12 @@
+"""This module contains useful decorators for telebot handlers."""
+
+
+import logging
 import functools
 from typing import Callable, Any, Optional
 
 from telebot.util import user_link
 
-from ayumi import logger
 from ayumi.loc import get_translator
 from ayumi.config import app_config, TELEGRAM_OWNER_ID
 from ayumi.db.repository import UserRepo
@@ -13,6 +16,9 @@ from ayumi.bot.props import ParseMode, T
 
 
 __all__ = ('auth_required', 'trace_input', 'auto_translator')
+
+
+logger = logging.getLogger(__name__)
 
 
 def auto_translator(func: Callable) -> Any:
@@ -53,7 +59,8 @@ def trace_input(func: Callable) -> Any:
         input_ = args[0]
         # decorated handler always has a response model as first argument
         # that model we're looking for
-        logger.info(f'input received: {input_.__class__.__name__}({input_})')
+        logger.info('input received: %s(%s)',
+                    input_.__class__.__name__, input_)
 
         return await func(*args, **kwargs)
 
@@ -82,9 +89,9 @@ def auth_required(level: Optional[int] = None,
             tg_user_t = get_translator(tg_user.language_code)
 
             if level not in app_config.security.levels and not admin_only:
-                logger.warning(
-                    f'undefined access level: "{level}" in "{func.__name__}"'
-                )
+                logger.warning('undefined access level: "%s" in "%s"',
+                               level, func.__name__)
+                # notify user about the error
                 await session.send_message(chat_id=tg_user.id,
                                            text=tg_user_t(T.Error.auth))
             else:
@@ -96,20 +103,21 @@ def auth_required(level: Optional[int] = None,
                     # than a required one to pass
                     auth = user_ is not None and user_.level >= level
 
+                # if everything is fine -> pass the func
                 if auth:
                     return await func(*args, **kwargs)
-                else:
-                    tg_admin = await get_user(TELEGRAM_OWNER_ID)
-                    # send `T.Error.permissions` message
-                    # with administrator link
-                    await session.send_message(
-                        chat_id=tg_user.id,
-                        parse_mode=ParseMode.html,
-                        text=(
-                            tg_user_t(T.Error.permissions)
-                            .format(admin=user_link(tg_admin))
-                        )
+                # otherwise, access violation
+                tg_admin = await get_user(TELEGRAM_OWNER_ID)
+                # send `T.Error.permissions` message
+                # with administrator link
+                await session.send_message(
+                    chat_id=tg_user.id,
+                    parse_mode=ParseMode.html,
+                    text=(
+                        tg_user_t(T.Error.permissions)
+                        .format(admin=user_link(tg_admin))
                     )
+                )
 
         return wrapper
 

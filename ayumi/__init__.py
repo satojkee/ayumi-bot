@@ -1,13 +1,14 @@
+"""Initializes and configures application base logger."""
+
+
 import logging
 
+from .db import *
+from .bot import *
 from .config import app_config
 
 
-__all__ = (
-    'logger',
-    'start_ayumi',
-    'init_schemas'
-)
+__all__ = ('start_ayumi', 'init_schemas')
 
 
 logger = logging.getLogger(__name__)
@@ -22,7 +23,3 @@ stderr_handler.setFormatter(
 
 logger.setLevel(app_config.logger.level)
 logger.addHandler(stderr_handler)
-
-
-from .bot import *
-from .db import *

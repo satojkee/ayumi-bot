@@ -1,14 +1,34 @@
+"""This module contains handlers that are related to OpenAI API."""
+
+
 import os
 from typing import Callable
 
 from telebot import types
 
-from ayumi.api import *
-from ayumi.config import app_config, TEMP_DIR
 from ayumi.bot import session
-from ayumi.bot.util import *
-from ayumi.bot.props import *
-from ayumi.bot.decorators import *
+from ayumi.config import app_config, TEMP_DIR
+from ayumi.api import (
+    generate_text,
+    generate_image,
+    speech_to_text
+)
+from ayumi.bot.util import (
+    extract_prompt,
+    get_api_response,
+    processing_message
+)
+from ayumi.bot.props import (
+    ParseMode,
+    T,
+    Pattern,
+    ContentType
+)
+from ayumi.bot.decorators import (
+    trace_input,
+    auth_required,
+    auto_translator
+)
 
 
 __all__ = (
@@ -83,7 +103,8 @@ async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
 @auth_required(level=app_config.security.ai.speech_to_text)
 @auto_translator
 @trace_input
-async def ai_speech_to_text_handler(message: types.Message, _: Callable) -> None:
+async def ai_speech_to_text_handler(message: types.Message,
+                                    _: Callable) -> None:
     """AI speech-to-text handler.
 
     :param message: types.Message - Message object
