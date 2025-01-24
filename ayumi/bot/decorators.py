@@ -70,11 +70,11 @@ def trace_input(func: Callable) -> Any:
 def auth_required(level: Optional[int] = None,
                   admin_only: Optional[bool] = False) -> Any:
     """Use it as decorator for telebot handlers.
-    Apply for each handler where user authentication is required.
+    Apply for each handler where user authorization is required.
 
     Usage:
         @bot.message_handler(...)
-        @authorization(level=...)
+        @auth_required(level=..., admin_only=...)
         def my_handler(message: types.Message, ...) -> None:
            ...
 
