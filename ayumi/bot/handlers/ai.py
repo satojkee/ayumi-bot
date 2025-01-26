@@ -161,8 +161,7 @@ async def ai_text_inline_handler(query: types.InlineQuery,
                 description=_(response),
                 title=_(T.Common.inline_title).format(query=query.query),
                 input_message_content=types.InputTextMessageContent(
-                    message_text=_(response),
-                    parse_mode=ParseMode.markdown
+                    message_text=_(response)
                 )
             )
         ]
