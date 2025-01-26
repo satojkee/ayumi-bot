@@ -3,7 +3,7 @@
 
 from io import BufferedReader
 
-import openai
+from openai import AsyncClient
 
 from ayumi.config import (
     OPENAI_SECRET_KEY,
@@ -20,8 +20,7 @@ __all__ = (
 
 
 # currently using AsyncClient instead of common sync `Client`
-client = openai.AsyncClient(api_key=OPENAI_SECRET_KEY,
-                            project=OPENAI_PROJECT_ID)
+client = AsyncClient(api_key=OPENAI_SECRET_KEY, project=OPENAI_PROJECT_ID)
 
 
 async def generate_text(prompt: str) -> str:
