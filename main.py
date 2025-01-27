@@ -12,7 +12,7 @@ from ayumi import start_ayumi, init_tables
 )
 def main(reinit: bool) -> None:
     init_tables(drop=reinit)
-    # start ayumi after `init_schemas`
+    # start ayumi after `init_tables`
     start_ayumi()
 
 
