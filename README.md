@@ -2,10 +2,14 @@
 
 [![BotPicture](https://i.imgur.com/dh6PRx9.png)](https://t.me/myAyumi_bot)
 
----
-
 * Author: [satojkee](https://github.com/satojkee/)
 * Project: [ayumi-bot](https://github.com/satojkee/ayumi-bot/)
+* Production: [AyumiBot](https://t.me/myAyumi_bot)
+
+> Production version is secured and won't allow you to use AI features without authorization. 
+
+
+---
 
 
 ## Features
@@ -49,9 +53,11 @@ pip3 install -r requirements.txt
 
 
 ### Configure environment variables
+
 > Set each property using `.env` file or via `cli`
 
 #### Required variables
+
 | Variable            | Description          | Hint                                                                                                                                   |
 |---------------------|----------------------|----------------------------------------------------------------------------------------------------------------------------------------|
 | `DATABASE_URI`      | Database credentials | PostgreSQL + asyncpg, format: `postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}` |
@@ -62,6 +68,7 @@ pip3 install -r requirements.txt
 | `OPENAI_SECRET_KEY` | OpenAI API token     | create a new `API-KEY` for a created project on OpenAI platform                                                                        |
 
 #### Additional variables
+
 > Used in [docker-compose](#docker-compose-postgresql--ayumibot) case, don't forget to build a `DATABASE_URI` in proper way \
 > Example: `postgresql+asyncpg://postgres:postgres_secret@postgres:5432/test_database`
 
@@ -72,7 +79,8 @@ pip3 install -r requirements.txt
 | `POSTGRES_DB`       | Database name     | `test_database` for example   |
 
 
-### Edit `app_config.toml` if needed
+### Edit `app_config.toml` if needed (optional)
+
 > For example, you can replace the `gpt-4o-mini` text-model with `gpt-3.5-turbo` or `gpt-4o`, **but don't forget to enable this model in your project settings on OpenAI platform**
 > 
 > ### Explanation
@@ -163,12 +171,14 @@ min_len = 3
 
 
 ### See available `cli` commands
+
 ```shell
 python main.py --help
 ```
 
 
 ### Recreate database schemas
+
 > **Current version of Ayumi supports only async version of `SQLAlchemy` (tested only with `PostgreSQL` database and `asyncpg` driver).**
 
 ```shell
@@ -177,8 +187,6 @@ python main.py --reinit
 
 
 ### Start bot
-> Don't forget to configure `inline` mode for your bot with `setinline` command via [BotFather](https://t.me/BotFather) \
-> **ONLY IF YOU WANT TO USE THIS FEATURE ^^**
 
 ```shell
 python main.py
@@ -191,6 +199,7 @@ python main.py
 ## Docker guide
 
 ### With remote `PostgreSQL` database
+
 > Don't forget to set [required](#required-variables) variables in `Dockerfile` or directly in `docker run --env ...`
 
 #### Build the image
@@ -200,14 +209,17 @@ docker build -t ayumi .
 ```
 
 #### Create and start a container
+
 ```shell
 docker run --env ... ayumi
 ```
 
 ### Docker compose `PostgreSQL + AyumiBot`
+
 Create `.env` file in the project **root** and configure all [required](#required-variables) + [additional](#additional-variables) variables.
 
 #### Build images and start containers
+
 > The `ayumi_bot` container may restart several times, due to the long `postgres` container init
 
 ```shell
@@ -218,10 +230,38 @@ docker-compose up -d
 ---
 
 
+## Telegram bot configuration via [BotFather](https://t.me/BotFather)
+
+### How to highlight commands?
+
+> Got to `@BOT_NAME > Edit Bot > Edit Commands` and sent the following message
+
+```text
+start - Let's start <3
+help - Usage guide
+get_access - Ask for access to my AI features
+users - The list of authorized users (admin only)
+groups - The list of authorized groups (admin only)
+```
+
+### How to configure inline mode?
+
+> Go to `@BOT_NAME > Bot Settings > Inline Mode` turn it on and set the placeholder
+
+Example:
+```text
+Ask me anything
+```
+
+
+---
+
+
 ## Pybabel guide
 
 ### Extract keys
-> <b>PyBabel</b> automatically extracts all strings (values inside `gettext` function) from your sources
+
+This command extracts all keys (values inside each `gettext` function) from sources
 
 ```shell
 pybabel extract . -o locale/base.pot
@@ -231,12 +271,15 @@ pybabel extract . -o locale/base.pot
 ### Init new locale
 
 ```shell
-pybabel init -l en -i locale/base.pot -d locale
+pybabel init -l de -i locale/base.pot -d locale
 ```
+
+Once your new locale is created, you can edit it in `locale/de/LC_MESSAGES/messages.po`
 
 
 ### Update .po files
-> Always use this after `extraction`
+
+This command execution is required every time you **rename old or add new keys**
 
 ```shell
 pybabel update -i locale/base.pot -d locale
@@ -244,7 +287,8 @@ pybabel update -i locale/base.pot -d locale
 
 
 ### Compile locales
-> Compiles `messages.po` to `messages.mo` files
+
+Once you have finished editing your locale, you must compile it `(otherwise, you'll see keys instead of actual translations)`
 
 ```shell
 pybabel compile -d locale
