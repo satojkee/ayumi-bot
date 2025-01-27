@@ -6,28 +6,16 @@ from typing import Callable
 
 from telebot import types
 
+from ayumi.loc import T
 from ayumi.bot import session
 from ayumi.config import app_config, TEMP_DIR
-from ayumi.api import (
-    generate_text,
-    generate_image,
-    speech_to_text
-)
+from ayumi.api import generate_text, generate_image, speech_to_text
+from ayumi.bot.misc import ParseMode, Pattern, ContentType
+from ayumi.bot.decorators import trace_input, auth_required, auto_translator
 from ayumi.bot.util import (
     extract_prompt,
     get_api_response,
     processing_message
-)
-from ayumi.bot.props import (
-    ParseMode,
-    T,
-    Pattern,
-    ContentType
-)
-from ayumi.bot.decorators import (
-    trace_input,
-    auth_required,
-    auto_translator
 )
 
 
@@ -41,7 +29,7 @@ __all__ = (
 
 @session.message_handler(content_types=ContentType.text,
                          regexp=Pattern.gen_text)
-@auth_required(level=app_config.security.ai.textgen)
+@auth_required(**app_config.security.ai.textgen)
 @auto_translator
 @trace_input
 async def ai_text_handler(message: types.Message, _: Callable) -> None:
@@ -66,7 +54,7 @@ async def ai_text_handler(message: types.Message, _: Callable) -> None:
 
 @session.message_handler(content_types=ContentType.text,
                          regexp=Pattern.gen_image)
-@auth_required(level=app_config.security.ai.imagegen)
+@auth_required(**app_config.security.ai.imagegen)
 @auto_translator
 @trace_input
 async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
@@ -100,7 +88,7 @@ async def ai_imagegen_handler(message: types.Message, _: Callable) -> None:
 
 
 @session.message_handler(content_types=ContentType.voice)
-@auth_required(level=app_config.security.ai.speech_to_text)
+@auth_required(**app_config.security.ai.speech_to_text)
 @auto_translator
 @trace_input
 async def ai_speech_to_text_handler(message: types.Message,
@@ -137,7 +125,7 @@ async def ai_speech_to_text_handler(message: types.Message,
 @session.inline_handler(
     func=lambda q: len(q.query) > app_config.inline.query.min_len
 )
-@auth_required(level=app_config.security.ai.textgen_inline)
+@auth_required(**app_config.security.ai.textgen_inline)
 @auto_translator
 @trace_input
 async def ai_text_inline_handler(query: types.InlineQuery,

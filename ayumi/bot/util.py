@@ -6,16 +6,21 @@ import logging
 from typing import Callable, Any, Union
 
 from telebot import types
+from telebot.util import user_link
 
+from ayumi.config import TELEGRAM_OWNER_ID
+from ayumi.loc import T
 from ayumi.bot import session
-from ayumi.bot.props import T, Pattern
+from ayumi.bot.misc import Pattern, ParseMode
 
 
 __all__ = (
     'get_api_response',
     'extract_prompt',
     'processing_message',
-    'get_user'
+    'get_user',
+    'parse_access_callback',
+    'permissions_violation'
 )
 
 
@@ -50,6 +55,22 @@ async def processing_message(message: types.Message,
                                   text=_(T.Common.processing))
 
 
+async def permissions_violation(chat_id: int, _: Callable) -> None:
+    """Send a `T.Error.permissions` message to the user in a private chat.
+
+    :param chat_id: int - telegram chat id
+    :param _: Callable - translator func
+    :return: None
+    """
+    tg_admin = await get_user(TELEGRAM_OWNER_ID)
+    # send message to the user
+    await session.send_message(
+        chat_id=chat_id,
+        parse_mode=ParseMode.html,
+        text=_(T.Error.permissions).format(admin=user_link(tg_admin))
+    )
+
+
 async def get_api_response(func: Callable, *args: Any, **kwargs: Any) -> str:
     """OpenAI API request wrapper. Used to handle errors and format response.
 
@@ -73,3 +94,14 @@ def extract_prompt(message: types.Message) -> str:
     :return: str - user's prompt
     """
     return re.sub(Pattern.gen_request, '', message.text).strip()
+
+
+def parse_access_callback(call: types.CallbackQuery) -> tuple[str, int]:
+    """Use it to parse access callback data.
+
+    :param call: types.CallbackQuery - CallbackQuery instance
+    :return: tuple[str, int] - chat_id, level
+    """
+    as_list = call.data.split(':')
+
+    return as_list[0], int(as_list[1])

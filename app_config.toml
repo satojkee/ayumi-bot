@@ -2,11 +2,21 @@
 levels = [1, 2, 3]
 zero = 0
 
-[security.ai]
-textgen = 1
-textgen_inline = 1
-speech_to_text = 2
-imagegen = 3
+[security.ai.textgen]
+level = 1
+allow_groups = true
+
+[security.ai.textgen_inline]
+level = 1
+allow_groups = false
+
+[security.ai.speech_to_text]
+level = 2
+allow_groups = true
+
+[security.ai.imagegen]
+level = 3
+allow_groups = false
 
 [sqlalchemy]
 pool_pre_ping = false

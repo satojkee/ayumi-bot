@@ -5,22 +5,19 @@ import re
 from typing import Callable
 
 from telebot import types
-from telebot.util import user_link, antiflood
+from telebot.util import antiflood, extract_command
 
-from ayumi.loc import get_translator
-from ayumi.config import app_config
-from ayumi.db.repository import UserRepo
 from ayumi.bot import session
-from ayumi.bot.util import get_user
-from ayumi.bot.props import ParseMode, T, Pattern, Command
+from ayumi.loc import get_translator, T
+from ayumi.config import app_config, ChatTypes
+from ayumi.db.repository import ChatRepo, ChatTypeRepo
+from ayumi.bot.util import parse_access_callback
+from ayumi.bot.misc import ParseMode, Pattern, Command
 from ayumi.bot.keyboard import access_keyboard
 from ayumi.bot.decorators import trace_input, auth_required, auto_translator
 
 
-__all__ = (
-    'access_callback',
-    'get_users_handler'
-)
+__all__ = ('access_callback', 'get_chats_handler')
 
 
 @session.callback_query_handler(
@@ -34,20 +31,25 @@ async def access_callback(call: types.CallbackQuery) -> None:
     :param call: types.CallbackQuery - CallbackQuery object
     :return: None
     """
-    uuid, level = [int(i) for i in call.data.split(':')]
-    # this is required to get user's language code
-    tg_user = await get_user(uuid)
-    # generating proper translator
-    t = get_translator(tg_user.language_code)
-
+    chat_id, level = parse_access_callback(call)
     if level != app_config.security.zero:
-        await UserRepo.update(uuid=uuid, level=level)
+        tg_chat = await session.get_chat(chat_id=chat_id)
+        # chat type from the db
+        chat_type_ = await ChatTypeRepo.get(name=tg_chat.type)
+        # create or update an existing chat in the db
+        await ChatRepo.update(
+            chat_id=chat_id,
+            title=tg_chat.title,
+            chat_type=chat_type_,
+            level=level
+        )
     else:
-        await UserRepo.delete(uuid=uuid)
+        await ChatRepo.delete(chat_id=chat_id)
 
-    # notify user about the decision
+    # send notification to the chat
+    t = get_translator()
     await session.send_message(
-        chat_id=uuid,
+        chat_id=chat_id,
         parse_mode=ParseMode.html,
         text=t(T.Access.granted
                if level != app_config.security.zero
@@ -58,31 +60,38 @@ async def access_callback(call: types.CallbackQuery) -> None:
                                  message_id=call.message.id)
 
 
-@session.message_handler(commands=Command.users)
+@session.message_handler(commands=Command.users + Command.groups)
 @auth_required(admin_only=True)
 @auto_translator
 @trace_input
-async def get_users_handler(message: types.Message, _: Callable) -> None:
+async def get_chats_handler(message: types.Message, _: Callable) -> None:
     """Fetches a list of users from the database.
 
     :param message: types.Message - Message object
     :param _: Callable - translator func
     :return: None
     """
-    for user_ in await UserRepo.get_all():
-        tg_user = await get_user(user_.uuid)
-        # use `antiflood` util to avoid telegram API violations
+    command = extract_command(message.text)
+    # type name depends on command
+    type_name = ChatTypes.private \
+        if command in Command.users \
+        else ChatTypes.group
+    # fetch chat type from the db to use its id as filter for `Chat` instances
+    chat_type = await ChatTypeRepo.get(name=type_name)
+    for chat_ in await ChatRepo.get_all(chat_type_id=chat_type.id):
         await antiflood(
             function=session.send_message,
-            chat_id=message.chat.id,
-            parse_mode=ParseMode.html,
+            chat_id=message.from_user.id,
+            text=_(T.Common.chat_profile).format(
+                chat_id=chat_.chat_id,
+                title=chat_.title,
+                chat_type=type_name,
+                created=chat_.created
+            ),
             reply_markup=access_keyboard(
-                uuid=user_.uuid,
-                highlight=user_.level,
+                chat_id=chat_.chat_id,
+                highlight=chat_.level,
                 t=_
             ),
-            text=_(T.Common.user_profile).format(
-                user=user_link(tg_user),
-                created=user_.created
-            )
+            parse_mode=ParseMode.html
         )

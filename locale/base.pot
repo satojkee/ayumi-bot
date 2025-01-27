@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-22 10:55+0200\n"
+"POT-Creation-Date: 2025-01-27 10:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,59 +17,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.0\n"
 
-#: ayumi/bot/props.py:38
+#: ayumi/loc.py:35
 msgid "common.help"
 msgstr ""
 
-#: ayumi/bot/props.py:39
+#: ayumi/loc.py:36
 msgid "common.access_request"
 msgstr ""
 
-#: ayumi/bot/props.py:40
+#: ayumi/loc.py:37
 msgid "common.processing"
 msgstr ""
 
-#: ayumi/bot/props.py:41
-msgid "common.user_profile"
+#: ayumi/loc.py:38
+msgid "common.chat_profile"
 msgstr ""
 
-#: ayumi/bot/props.py:42
+#: ayumi/loc.py:39
 msgid "common.inline_title"
 msgstr ""
 
-#: ayumi/bot/props.py:45
+#: ayumi/loc.py:44
 msgid "access.granted"
 msgstr ""
 
-#: ayumi/bot/props.py:46
+#: ayumi/loc.py:45
 msgid "access.refused"
 msgstr ""
 
-#: ayumi/bot/props.py:47
+#: ayumi/loc.py:46
 msgid "access.pending"
 msgstr ""
 
-#: ayumi/bot/props.py:50
+#: ayumi/loc.py:51
 msgid "error.api"
 msgstr ""
 
-#: ayumi/bot/props.py:51
+#: ayumi/loc.py:52
 msgid "error.permissions"
 msgstr ""
 
-#: ayumi/bot/props.py:52
+#: ayumi/loc.py:53
 msgid "error.auth"
 msgstr ""
 
-#: ayumi/bot/props.py:55
+#: ayumi/loc.py:58
 msgid "access_keyboard.highlighted"
 msgstr ""
 
-#: ayumi/bot/props.py:56
+#: ayumi/loc.py:59
 msgid "access_keyboard.level"
 msgstr ""
 
-#: ayumi/bot/props.py:57
+#: ayumi/loc.py:60
 msgid "access_keyboard.deny"
 msgstr ""
 

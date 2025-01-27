@@ -8,7 +8,7 @@ from .bot import *
 from .config import app_config
 
 
-__all__ = ('start_ayumi', 'init_schemas')
+__all__ = ('start_ayumi', 'init_tables')
 
 
 logger = logging.getLogger(__name__)

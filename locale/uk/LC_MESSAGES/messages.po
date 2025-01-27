@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-01-22 10:55+0200\n"
+"POT-Creation-Date: 2025-01-27 10:06+0200\n"
 "PO-Revision-Date: 2025-01-02 12:52+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: uk\n"
@@ -19,14 +19,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.0\n"
 
-#: ayumi/bot/props.py:38
+#: ayumi/loc.py:35
 msgid "common.help"
 msgstr ""
 "Привіт, <b>{first_name}</b>!\n"
 "Я <b>{bot_name}</b> - розумна чат-помічниця.\n"
 "Ми повинні бути друзями, щоб ви змогли користуватися моїми можливостями "
 "^^\n"
-"Запросіть доступ командою <code>/{request_access}</code> 👉👈\n"
+"Запросіть доступ командою <code>/{get_access}</code> 👉👈\n"
 "\n"
 "<b>Як спитати щось в мене?</b>\n"
 "Почни своє повідомлення з <b>{bot_name}</b>\n"
@@ -39,61 +39,67 @@ msgstr ""
 "<b>Голос у текст</b>\n"
 "Просто перешли голосове повідомлення, транскрипцію якого хочеш отримати"
 
-#: ayumi/bot/props.py:39
+#: ayumi/loc.py:36
 msgid "common.access_request"
 msgstr ""
-"Запит доступу від @{username} | [{uuid}]\n"
+"Запит доступу від {user}\n"
+"ID Чату: <code>{chat_id}</code>\n"
+"Назва: \"<code>{title}</code>\"\n"
+"Тип часту: <b>{chat_type}</b>\n"
+"\n"
 "Оберіть дію знизу"
 
-#: ayumi/bot/props.py:40
+#: ayumi/loc.py:37
 msgid "common.processing"
 msgstr "Опрацьовую твій запит 🕒"
 
-#: ayumi/bot/props.py:41
-msgid "common.user_profile"
+#: ayumi/loc.py:38
+msgid "common.chat_profile"
 msgstr ""
-"Користувач: {user}\n"
-"Додано: <code>{created}</code>"
+"Чат: <code>{chat_id}</code>\n"
+"Назва: \"<code>{title}</code>\"\n"
+"Тип: <b>{chat_type}</b>\n"
+"Додано: <b>{created}</b>"
 
-#: ayumi/bot/props.py:42
+#: ayumi/loc.py:39
 msgid "common.inline_title"
 msgstr "Моя відповідь на \"{query}\""
 
-#: ayumi/bot/props.py:45
+#: ayumi/loc.py:44
 msgid "access.granted"
 msgstr "Рівень доступу: <b>{level}</b> надано ദ്ദി(˵ •̀ ᴗ - ˵ ) ✧ "
 
-#: ayumi/bot/props.py:46
+#: ayumi/loc.py:45
 msgid "access.refused"
-msgstr "Я не хочу дружити з тобою 😢"
+msgstr "Відмовлено в доступі :c"
 
-#: ayumi/bot/props.py:47
+#: ayumi/loc.py:46
 msgid "access.pending"
 msgstr "Я подумаю, але дам тобі знати, як закінчу ≽^•⩊•^≼"
 
-#: ayumi/bot/props.py:50
+#: ayumi/loc.py:51
 msgid "error.api"
 msgstr "Щось не так з запитом до API серверу. Будь ласка, спробуй ще раз."
 
-#: ayumi/bot/props.py:51
+#: ayumi/loc.py:52
 msgid "error.permissions"
 msgstr ""
 "⚠️ Недостатньо прав для цієї дії\n"
 "Для додаткової інформації, звернися до: {admin}"
 
-#: ayumi/bot/props.py:52
+#: ayumi/loc.py:53
 msgid "error.auth"
 msgstr "Помилка авторизації. Будь ласка, спробуй ще раз."
 
-#: ayumi/bot/props.py:55
+#: ayumi/loc.py:58
 msgid "access_keyboard.highlighted"
 msgstr "Рівень {value} 🌟"
 
-#: ayumi/bot/props.py:56
+#: ayumi/loc.py:59
 msgid "access_keyboard.level"
 msgstr "Рівень {value}"
 
-#: ayumi/bot/props.py:57
+#: ayumi/loc.py:60
 msgid "access_keyboard.deny"
 msgstr "Відмовити ❌"
 

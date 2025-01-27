@@ -1,6 +1,6 @@
 import click
 
-from ayumi import start_ayumi, init_schemas
+from ayumi import start_ayumi, init_tables
 
 
 @click.command()
@@ -11,7 +11,7 @@ from ayumi import start_ayumi, init_schemas
     help='Use it to recreate database schemas.'
 )
 def main(reinit: bool) -> None:
-    init_schemas(drop=reinit)
+    init_tables(drop=reinit)
     # start ayumi after `init_schemas`
     start_ayumi()
 
