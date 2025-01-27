@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import (
 from ayumi.config import DATABASE_URI, app_config
 
 
-__all__ = ('provider', 'init_schemas')
+__all__ = ('provider', 'init_tables')
 
 
 # Engine is always used to create session (`AsyncSession` instances)
@@ -42,7 +42,7 @@ def provider(func: Callable) -> Any:
     return wrapper
 
 
-def init_schemas(drop: bool = False) -> None:
+def init_tables(drop: bool = False) -> None:
     """Use it to re/create required schemas in the db.
 
     :param drop: bool - drop attached tables if set to `True`
@@ -50,7 +50,12 @@ def init_schemas(drop: bool = False) -> None:
     """
     import asyncio
 
-    async def _init_schemas() -> None:
+    async def _create_necessary() -> None:
+        from ayumi.db.repository import ChatTypeRepo
+        # fill `ayumi_chat_types` table with telegram API supported types
+        await ChatTypeRepo.create()
+
+    async def _init_tables() -> None:
         from ayumi.db.models import BaseModel
 
         try:
@@ -69,4 +74,7 @@ def init_schemas(drop: bool = False) -> None:
 
             sys.exit(-1)
 
-    asyncio.run(_init_schemas())
+    asyncio.run(_init_tables())
+    # fill tables with necessary data
+    if drop:
+        asyncio.run(_create_necessary())

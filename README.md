@@ -16,7 +16,7 @@
 - Inline mode support ✔️
 - Private chat support ✔️
 - Access management system with different levels of access ✔️
-- Group chat support `coming soon`
+- Group chat support ✔️
 
 <img alt="preview" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExb282OXY5eHI2Z25kOXRzY2RneWI4amszeTV3cHY2anlqN3dib3FkdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VmfOoHbB3rzhHpvsRe/giphy.gif" />
 
@@ -81,11 +81,11 @@ pip3 install -r requirements.txt
 >   * **levels** - a list of supported security levels in ascending order
 >   * **zero** - this value is used in **keyboard.access_keyboard** and **handlers.admin.access_callback** to represent negative access response
 >
-> * `security.ai` - define required security levels for AI features here
->   * **textgen** - security level to access text generation feature
->   * **textgen_inline** - security level to access text generation in inline mode
->   * **speech_to_text** - security level to access speech-to-text feature
->   * **imagegen** - security level to access image generation feature
+> * `security.ai` - currently supports **level** and **allow_groups** params
+>   * **textgen** - text generation
+>   * **textgen_inline** - text generation in inline mode
+>   * **speech_to_text** - speech-to-text
+>   * **imagegen** - image generation
 > 
 > * `inline.query`
 >   * **min_len** - min length of a prompt in **inline mode**
@@ -113,11 +113,21 @@ pip3 install -r requirements.txt
 levels = [1, 2, 3]
 zero = 0
 
-[security.ai]
-textgen = 1
-textgen_inline = 1
-speech_to_text = 2
-imagegen = 3
+[security.ai.textgen]
+level = 1
+allow_groups = true
+
+[security.ai.textgen_inline]
+level = 1
+allow_groups = false
+
+[security.ai.speech_to_text]
+level = 2
+allow_groups = true
+
+[security.ai.imagegen]
+level = 3
+allow_groups = false
 
 [sqlalchemy]
 pool_pre_ping = false

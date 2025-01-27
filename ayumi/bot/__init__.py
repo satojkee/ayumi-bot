@@ -21,8 +21,8 @@ def start_ayumi() -> None:
 
     logger = logging.getLogger(__name__)
 
-    logger.debug(f'starting %s', __name__)
-    logger.debug(f'running configuration: %s',
+    logger.debug('starting %s', __name__)
+    logger.debug('running configuration: %s',
                  json.dumps(app_config, indent=2))
 
     asyncio.run(session.infinity_polling())

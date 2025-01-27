@@ -2,6 +2,7 @@
 
 
 import tempfile
+from dataclasses import dataclass
 
 from toml import load
 from environs import Env
@@ -16,7 +17,8 @@ __all__ = (
     'OPENAI_SECRET_KEY',
     'OPENAI_PROJECT_ID',
     'TEMP_DIR',
-    'app_config'
+    'app_config',
+    'ChatTypes'
 )
 
 
@@ -43,3 +45,12 @@ TEMP_DIR: str = tempfile.gettempdir()
 # Load app config (app_config.toml) file
 with open('app_config.toml', mode='r', encoding='utf-8') as f:
     app_config = DefaultMunch.fromDict(load(f))
+
+
+@dataclass(frozen=True)
+class ChatTypes:
+    """Telegram chat types."""
+    private: str = 'private'
+    group: str = 'group'
+    supergroup: str = 'supergroup'
+    channel: str = 'channel'
