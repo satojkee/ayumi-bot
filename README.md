@@ -1,4 +1,4 @@
-# Ayumi - AI-powered chat assistant for telegram
+# Ayumi - Chat-GPT powered bot for telegram
 
 [![BotPicture](https://i.imgur.com/dh6PRx9.png)](https://t.me/myAyumi_bot)
 
