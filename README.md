@@ -185,6 +185,11 @@ python main.py --help
 python main.py --reinit
 ```
 
+### Compile locales [PyBabel guide](#pybabel-guide)
+
+```shell
+pybabel compile -d locale
+```
 
 ### Start bot
 
