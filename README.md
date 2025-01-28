@@ -21,6 +21,7 @@
 - Private chat support ✔️
 - Access management system with different levels of access ✔️
 - Group chat support ✔️
+- [Deepseek](https://www.deepseek.com/) support `coming soon`
 
 <img alt="preview" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExb282OXY5eHI2Z25kOXRzY2RneWI4amszeTV3cHY2anlqN3dib3FkdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VmfOoHbB3rzhHpvsRe/giphy.gif" />
 
