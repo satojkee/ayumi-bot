@@ -234,7 +234,7 @@ docker-compose up -d
 
 ### How to highlight commands?
 
-> Got to `@BOT_NAME > Edit Bot > Edit Commands` and sent the following message
+> Got to `@BOT_NAME > Edit Bot > Edit Commands` and send the following message
 
 ```text
 start - Let's start <3
