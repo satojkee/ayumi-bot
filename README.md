@@ -1,5 +1,3 @@
-[![Pylint](https://github.com/satojkee/ayumi-bot/actions/workflows/pylint.yml/badge.svg)](https://github.com/satojkee/ayumi-bot/actions/workflows/pylint.yml)
-
 # Ayumi - Chat-GPT powered telegram bot
 
 [![BotPicture](https://i.imgur.com/dh6PRx9.png)](https://t.me/myAyumi_bot)
