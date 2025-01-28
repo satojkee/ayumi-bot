@@ -9,3 +9,4 @@ click~=8.1.7
 openai~=1.59.3
 asyncpg~=0.30.0
 SQLAlchemy[asyncio]~=2.0.37
+Babel~=2.13.0
