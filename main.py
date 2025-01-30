@@ -1,3 +1,6 @@
+"""Application entrypoint."""
+
+
 import click
 
 from ayumi import start_ayumi, init_tables
